@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000",
+  ),
   title: "Our June — Cinematic Wedding Photography",
   description: "Moody, cinematic photography for couples wildly in love.",
   icons: { icon: "/favicon.ico" },
