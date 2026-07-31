@@ -13,11 +13,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Our June — Cinematic Wedding Photography",
     description: "Photographs of love, joy, and moments of life that feel like a movie.",
-    images: [{ url: "/og.png", width: 1733, height: 907, alt: "Our June wedding photography" }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/og.png"],
   },
 };
 

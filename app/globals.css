@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Archivo";
-  src: url("https://assets-pw.pixieset.com/gf/archivo/n5.woff2") format("woff2");
+  src: url("/fonts/archivo-500.woff2") format("woff2");
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: "Roboto Mono";
-  src: url("https://assets-pw.pixieset.com/gf/robotomono/n3.woff2") format("woff2");
+  src: url("/fonts/roboto-mono-300.woff2") format("woff2");
   font-style: normal;
   font-weight: 300;
   font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: "Roboto Mono";
-  src: url("https://assets-pw.pixieset.com/gf/robotomono/n4.woff2") format("woff2");
+  src: url("/fonts/roboto-mono-400.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
