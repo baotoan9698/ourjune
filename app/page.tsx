@@ -1,17 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const nav = ["Home", "About", "Services", "Testimonials", "Portfolio", "Contact"];
 
+const testimonials = [
+  {
+    quote:
+      "Being photographed by these two made all the difference. They just get it. The little glances, the unspoken words. Our photos reflect the kind of love and connection only someone who understands that bond can capture.",
+    names: "Justin & Nadia",
+    image: "/horizontal-3.jpg",
+  },
+  {
+    quote:
+      "From the first conversation, we felt completely at ease. Nothing felt staged or rushed. They gave us space to be ourselves, and somehow turned every quiet, imperfect moment into something we will treasure forever.",
+    names: "Maya & Elliot",
+    image: "/horizontal-1.jpg",
+  },
+  {
+    quote:
+      "Looking through our gallery felt like reliving the entire day. The movement, the laughter, even the stillness between moments — it is all there. These photographs feel unmistakably like us.",
+    names: "Sophie & Daniel",
+    image: "/hero-alt.jpg",
+  },
+];
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const testimonial = testimonials[testimonialIndex];
+
+  useEffect(() => {
+    const updateHeader = () => setScrolled(window.scrollY > 24);
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    return () => window.removeEventListener("scroll", updateHeader);
+  }, []);
 
   return (
     <main>
       <section className="hero" id="home">
-        <header className="site-header">
-          <a className="logo" href="#home">ONYX</a>
+        <header className={`site-header${scrolled ? " scrolled" : ""}`}>
+          <a className="logo" href="#home">OUR JUNE</a>
           <button
             className="menu-button"
             aria-label="Toggle navigation"
@@ -53,20 +84,35 @@ export default function Home() {
       </section>
 
       <section className="testimonial" id="testimonials">
-        <div className="testimonial-photo" />
-        <div className="testimonial-card">
+        <div className="testimonial-card" key={`copy-${testimonialIndex}`}>
           <span className="eyebrow">KIND WORDS</span>
-          <blockquote>“Being photographed by these two made all the difference. They just get it. The little glances, the unspoken words. Our photos reflect the kind of love and connection only someone who understands that bond can capture.”</blockquote>
+          <blockquote>{testimonial.quote}</blockquote>
           <div className="testimonial-footer">
-            <strong>Justin &amp; Nadia</strong>
-            <span>← &nbsp;&nbsp; →</span>
+            <strong>{testimonial.names}</strong>
+            <div className="testimonial-controls">
+              <button
+                aria-label="Previous testimonial"
+                onClick={() => setTestimonialIndex((testimonialIndex - 1 + testimonials.length) % testimonials.length)}
+              >
+                ←
+              </button>
+              <button
+                aria-label="Next testimonial"
+                onClick={() => setTestimonialIndex((testimonialIndex + 1) % testimonials.length)}
+              >
+                →
+              </button>
+            </div>
           </div>
+        </div>
+        <div className="testimonial-visual">
+          <img key={`image-${testimonialIndex}`} src={testimonial.image} alt={`${testimonial.names} love story`} />
         </div>
       </section>
 
       <section className="quote">
         <p>Mystery is not about traveling to new places but about looking with new eyes.</p>
-        <span>— MARCEL PROUST</span>
+        <span>MARCEL PROUST</span>
       </section>
 
       <section className="works section-pad" id="portfolio">
@@ -112,7 +158,7 @@ export default function Home() {
         <span className="section-kicker">LET&apos;S MAKE SOMETHING TIMELESS</span>
         <h2>Get in touch</h2>
         <p>Send us a message, and we&apos;ll set up a free discovery call to start planning your dream elopement.</p>
-        <a className="light-button" href="mailto:hello@onyx.photo">Let&apos;s Connect <span>↗</span></a>
+        <a className="light-button" href="mailto:hello@ourjune.photo">Let&apos;s Connect <span>↗</span></a>
       </section>
 
       <footer>
@@ -121,8 +167,8 @@ export default function Home() {
           <a href="https://www.instagram.com/pixieset/">@PIXIESET</a>
         </div>
         <div className="footer-bottom">
-          <strong>ONYX</strong>
-          <p>© 2026 ONYX — PHOTOGRAPHY FOR THE WILDLY IN LOVE</p>
+          <strong>OUR JUNE</strong>
+          <p>© 2026 OUR JUNE — PHOTOGRAPHY FOR THE WILDLY IN LOVE</p>
           <a href="#home">BACK TO TOP ↑</a>
         </div>
       </footer>
