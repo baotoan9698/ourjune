@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const nav = ["Home", "About", "Services", "Testimonials", "Portfolio", "Contact"];
+const nav = ["Home", "About", "Testimonials", "Portfolio", "Contact"];
 
 const testimonials = [
   {
@@ -140,36 +140,34 @@ export default function Home() {
         <a className="outline-button" href="#contact">See Portfolio <span>↗</span></a>
       </section>
 
-      <section className="services" id="services">
-        <div className="services-image" />
-        <div className="services-copy">
-          <span className="section-kicker">03 — THE EXPERIENCE</span>
-          <h2>Your story,<br />honestly told.</h2>
-          <p>From windswept elopements to slow mornings at home, we make space for you to be fully present while we preserve the feeling of it all.</p>
-          <div className="service-list">
-            <span>Elopements <b>01</b></span>
-            <span>Weddings <b>02</b></span>
-            <span>Couples <b>03</b></span>
+      <section className="contact" id="contact">
+        <div className="contact-content">
+          <h2>Get in touch</h2>
+          <p>Send us a message, and we&apos;ll set up a free discovery call to start planning your dream elopement.</p>
+          <a className="light-button" href="mailto:hello@ourjune.photo">Let&apos;s Connect</a>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <div className="footer-gallery" aria-label="Selected Instagram photographs">
+          <img src="/portrait-1.jpg" alt="Our June wedding story" />
+          <img src="/portrait-4.jpg" alt="Our June couple portrait" />
+          <img src="/horizontal-3.jpg" alt="Our June beach ceremony" />
+          <img src="/hero.jpg" alt="Our June cinematic wedding" />
+        </div>
+        <div className="footer-social">
+          <span>FOLLOW US ON INSTAGRAM</span>
+          <a className="instagram-handle" href="https://www.instagram.com/">@OURJUNE</a>
+          <div className="social-links">
+            <a className="facebook-icon" href="https://www.facebook.com/" aria-label="Facebook">f</a>
+            <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram">
+              <span />
+            </a>
           </div>
         </div>
-      </section>
-
-      <section className="contact section-pad" id="contact">
-        <span className="section-kicker">LET&apos;S MAKE SOMETHING TIMELESS</span>
-        <h2>Get in touch</h2>
-        <p>Send us a message, and we&apos;ll set up a free discovery call to start planning your dream elopement.</p>
-        <a className="light-button" href="mailto:hello@ourjune.photo">Let&apos;s Connect <span>↗</span></a>
-      </section>
-
-      <footer>
-        <div>
-          <span>FOLLOW US ON INSTAGRAM</span>
-          <a href="https://www.instagram.com/pixieset/">@PIXIESET</a>
-        </div>
         <div className="footer-bottom">
-          <strong>OUR JUNE</strong>
-          <p>© 2026 OUR JUNE — PHOTOGRAPHY FOR THE WILDLY IN LOVE</p>
-          <a href="#home">BACK TO TOP ↑</a>
+          <p>© 2026 OUR JUNE</p>
+          <a href="#home" aria-label="Back to top">↑</a>
         </div>
       </footer>
     </main>
