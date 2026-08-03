@@ -7,7 +7,7 @@ const nav = [
   ["About", "/about"],
   ["Service", "/service"],
   ["Testimonials", "/testimonials"],
-  ["Gallery", "/gallery"],
+  ["Gallery", "/gallery-1"],
   ["Contact", "/contact"],
 ];
 
@@ -34,6 +34,7 @@ const testimonials = [
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const testimonial = testimonials[testimonialIndex];
@@ -60,11 +61,15 @@ export default function Home() {
             <span />
           </button>
           <nav className={menuOpen ? "nav open" : "nav"}>
-            {nav.map(([item, href]) => (
-              <a key={href} href={href} onClick={() => setMenuOpen(false)}>
-                {item}
-              </a>
-            ))}
+            {nav.map(([item, href]) => item === "Gallery" ? (
+              <div className="nav-dropdown" key={href}>
+                <a className="gallery-desktop-link" href={href}>Gallery <span aria-hidden="true">+</span></a>
+                <button className="gallery-mobile-toggle" type="button" aria-expanded={galleryOpen} onClick={() => setGalleryOpen(!galleryOpen)}>Gallery <span aria-hidden="true">+</span></button>
+                <div className={`nav-submenu${galleryOpen ? " mobile-open" : ""}`}>
+                  {[1,2,3,4].map(number => <a key={number} href={`/gallery-${number}`} onClick={() => setMenuOpen(false)}>Gallery {number}</a>)}
+                </div>
+              </div>
+            ) : <a key={href} href={href} onClick={() => setMenuOpen(false)}>{item}</a>)}
           </nav>
         </header>
         <div className="hero-copy">

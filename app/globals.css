@@ -38,6 +38,16 @@ img { display:block; width:100%; object-fit:cover; }
 .nav { display:flex; align-items:center; gap:48px; }
 .nav a { font-family:"Roboto Mono", monospace; font-style:normal; font-weight:400; font-size:14px; line-height:17px; color:rgb(255,255,255); letter-spacing:1.3px; text-transform:uppercase; }
 .nav i { display:inline-block; width:4px; height:4px; border-radius:50%; background:#fff; margin-left:8px; vertical-align:middle; }
+.nav-dropdown { position:relative; }
+.nav-dropdown>a { display:flex; align-items:center; gap:8px; }
+.nav-dropdown>a span { font-size:15px; transition:transform .25s ease; }
+.gallery-mobile-toggle { display:none; border:0; padding:0; background:transparent; color:white; font:400 14px/17px "Roboto Mono",monospace; letter-spacing:1.3px; text-transform:uppercase; }
+.nav-submenu { position:absolute; top:calc(100% + 18px); left:-20px; width:145px; padding:16px 20px; display:grid; gap:14px; background:#090909; border:1px solid rgba(255,255,255,.1); opacity:0; visibility:hidden; transform:translateY(-7px); transition:opacity .2s ease,transform .2s ease,visibility .2s; }
+.nav-submenu::before { content:""; position:absolute; left:0; right:0; top:-19px; height:20px; }
+.nav-submenu a { font-size:11px; line-height:14px; white-space:nowrap; color:#aaa; transition:color .2s; }
+.nav-submenu a:hover,.nav-submenu a:focus-visible { color:white; }
+.nav-dropdown:hover .nav-submenu,.nav-dropdown:focus-within .nav-submenu { opacity:1; visibility:visible; transform:translateY(0); }
+.nav-dropdown:hover>a span,.nav-dropdown:focus-within>a span { transform:rotate(45deg); }
 .menu-button { display:none; border:0; background:none; }
 .hero-copy h1 { margin:0 0 0 2.7%; padding-top:154px; max-width:610px; font-family:"Archivo", sans-serif; font-style:normal; font-weight:500; color:rgb(215,213,213); font-size:60px; line-height:66px; letter-spacing:-2.6px; }
 .hero-copy p { position:absolute; width:440px; right:10.8%; bottom:22%; margin:0; font-family:"Roboto Mono", monospace; font-style:normal; font-weight:300; color:rgb(215,213,213); font-size:14px; line-height:25px; }
@@ -131,6 +141,15 @@ h2 { font-weight:400; letter-spacing:-4px; }
   .nav { position:fixed; inset:0; background:#0a0a0a; display:none; flex-direction:column; justify-content:center; gap:32px; }
   .nav.open { display:flex; }
   .nav a { font-size:19px; }
+  .nav-dropdown { width:100%; text-align:center; }
+  .gallery-desktop-link { display:none!important; }
+  .gallery-mobile-toggle { display:flex; align-items:center; justify-content:center; gap:9px; width:100%; font-size:19px; cursor:pointer; }
+  .gallery-mobile-toggle span { transition:transform .25s ease; }
+  .gallery-mobile-toggle[aria-expanded="true"] span { transform:rotate(45deg); }
+  .nav-submenu,.nav-dropdown:hover .nav-submenu { position:static; width:auto; margin-top:0; padding:0; display:none; gap:13px; border:0; background:transparent; opacity:0; visibility:hidden; transform:none; }
+  .nav-dropdown .nav-submenu.mobile-open { display:grid; margin-top:18px; opacity:1; visibility:visible; }
+  .nav-submenu::before { display:none; }
+  .nav-submenu a { font-size:13px; color:#999; }
   .hero-copy h1 { margin:0 22px; padding-top:145px; font-size:48px; line-height:53px; letter-spacing:-2px; }
   .hero-copy p { width:auto; left:25%; right:24px; bottom:10%; font-size:12px; line-height:21px; }
   .section-pad { padding:90px 24px; }

@@ -7,12 +7,13 @@ const links = [
   ["About", "/about"],
   ["Service", "/service"],
   ["Testimonials", "/testimonials"],
-  ["Gallery", "/gallery"],
+  ["Gallery", "/gallery-1"],
   ["Contact", "/contact"],
 ];
 
 export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
   const [open, setOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -29,7 +30,15 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
         <span /><span />
       </button>
       <nav className={open ? "nav open" : "nav"}>
-        {links.map(([label, href]) => <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>)}
+        {links.map(([label, href]) => label === "Gallery" ? (
+          <div className="nav-dropdown" key={href}>
+            <a className="gallery-desktop-link" href={href}>Gallery <span aria-hidden="true">+</span></a>
+            <button className="gallery-mobile-toggle" type="button" aria-expanded={galleryOpen} onClick={() => setGalleryOpen(!galleryOpen)}>Gallery <span aria-hidden="true">+</span></button>
+            <div className={`nav-submenu${galleryOpen ? " mobile-open" : ""}`}>
+              {[1,2,3,4].map(number => <a key={number} href={`/gallery-${number}`} onClick={() => setOpen(false)}>Gallery {number}</a>)}
+            </div>
+          </div>
+        ) : <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>)}
       </nav>
     </header>
   );
