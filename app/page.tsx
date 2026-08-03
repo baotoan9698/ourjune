@@ -7,7 +7,7 @@ const nav = [
   ["About", "/about"],
   ["Service", "/service"],
   ["Testimonials", "/testimonials"],
-  ["Gallery", "/gallery-1"],
+  ["Portfolio", "/Portfolio"],
   ["Contact", "/contact"],
 ];
 
@@ -61,10 +61,10 @@ export default function Home() {
             <span />
           </button>
           <nav className={menuOpen ? "nav open" : "nav"}>
-            {nav.map(([item, href]) => item === "Gallery" ? (
+            {nav.map(([item, href]) => item === "Portfolio" ? (
               <div className="nav-dropdown" key={href}>
-                <a className="gallery-desktop-link" href={href}>Gallery <span aria-hidden="true">+</span></a>
-                <button className="gallery-mobile-toggle" type="button" aria-expanded={galleryOpen} onClick={() => setGalleryOpen(!galleryOpen)}>Gallery <span aria-hidden="true">+</span></button>
+                <a className="gallery-desktop-link" href={href}>Portfolio <span aria-hidden="true">+</span></a>
+                <div className="gallery-mobile-row"><a href={href} onClick={() => setMenuOpen(false)}>Portfolio</a><button className="gallery-mobile-toggle" type="button" aria-label="Toggle portfolio galleries" aria-expanded={galleryOpen} onClick={() => setGalleryOpen(!galleryOpen)}><span aria-hidden="true">+</span></button></div>
                 <div className={`nav-submenu${galleryOpen ? " mobile-open" : ""}`}>
                   {[1,2,3,4].map(number => <a key={number} href={`/gallery-${number}`} onClick={() => setMenuOpen(false)}>Gallery {number}</a>)}
                 </div>

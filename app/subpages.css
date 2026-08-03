@@ -80,5 +80,21 @@
 .testimonial-item h2 { text-align:right; font:500 25px/1 "Archivo",sans-serif; }
 .testimonial-contact { background-image:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.5)),url('/hero-alt.jpg'); background-size:cover; background-position:center; }
 
+/* Portfolio */
+.portfolio-hero { min-height:670px; position:relative; display:flex; align-items:flex-end; padding:55px 3.2%; background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.62)),url('/hero.jpg') center 38%/cover; filter:grayscale(1); }
+.portfolio-hero-copy { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:8%; filter:none; }
+.portfolio-hero h1 { margin:0; font:500 clamp(58px,6vw,92px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
+.portfolio-hero p { max-width:480px; margin:0; font:300 12px/21px "Roboto Mono",monospace; }
+.portfolio-collections { min-height:1050px; padding:100px 12%; display:grid; grid-template-columns:1fr 1fr; gap:80px 18%; align-items:start; }
+.portfolio-project { width:72%; display:block; }
+.portfolio-project:nth-child(even) { justify-self:end; }
+.portfolio-project:nth-child(3) { margin-top:30px; }
+.portfolio-project:nth-child(4) { margin-top:80px; }
+.portfolio-project span { display:block; margin-bottom:12px; color:#888; font:300 9px/1 "Roboto Mono",monospace; }
+.portfolio-project img { width:100%; height:330px; object-fit:cover; filter:saturate(.6); transition:filter .35s,transform .5s; }
+.portfolio-project:hover img { filter:saturate(1); transform:scale(1.015); }
+.portfolio-project h2 { margin:14px 0 0; text-align:right; font:500 24px/1 "Archivo",sans-serif; letter-spacing:-.6px; }
+.portfolio-page .image-contact { min-height:520px; background-image:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.58)),url('/hero-alt.jpg'); background-size:cover; background-position:center; }
+
 @media(max-width:800px){
-  .subpage-main{padding-top:86px}.page-intro,.about-hero-grid,.about-story,.contact-page-head,.contact-layout,.gallery-hero-copy,.service-hero-copy,.approach{grid-template-columns:1fr}.page-intro{min-height:270px;gap:55px}.page-title{justify-self:start;text-align:left}.about-hero-grid{gap:50px}.about-hero-grid img{width:80%}.about-story>img{height:500px}.about-columns{grid-template-columns:1fr}.about-services{grid-template-columns:1fr}.about-services img{height:430px}.contact-page-head{gap:60px}.contact-details{justify-self:start}.contact-layout{padding:0 24px 100px;gap:70px}.gallery-hero,.service-hero{min-height:620px}.gallery-hero-copy,.service-hero-copy{gap:45px}.masonry{columns:1;padding:55px 24px}.packages,.testimonials-grid{grid-template-columns:1fr;padding:70px 24px;gap:70px}.testimonial-item:nth-child(3n+2){margin-top:0}.faq{padding:70px 24px}.faq-row{grid-template-columns:1fr;gap:18px}.inner-contact{grid-template-columns:1fr;gap:35px}.about-story-copy{min-height:620px}.inner-footer{min-height:650px}}
+  .subpage-main{padding-top:86px}.page-intro,.about-hero-grid,.about-story,.contact-page-head,.contact-layout,.gallery-hero-copy,.service-hero-copy,.approach,.portfolio-hero-copy{grid-template-columns:1fr}.page-intro{min-height:270px;gap:55px}.page-title{justify-self:start;text-align:left}.about-hero-grid{gap:50px}.about-hero-grid img{width:80%}.about-story>img{height:500px}.about-columns{grid-template-columns:1fr}.about-services{grid-template-columns:1fr}.about-services img{height:430px}.contact-page-head{gap:60px}.contact-details{justify-self:start}.contact-layout{padding:0 24px 100px;gap:70px}.gallery-hero,.service-hero,.portfolio-hero{min-height:620px}.gallery-hero-copy,.service-hero-copy,.portfolio-hero-copy{gap:45px}.masonry{columns:1;padding:55px 24px}.packages,.testimonials-grid{grid-template-columns:1fr;padding:70px 24px;gap:70px}.testimonial-item:nth-child(3n+2){margin-top:0}.faq{padding:70px 24px}.faq-row{grid-template-columns:1fr;gap:18px}.inner-contact{grid-template-columns:1fr;gap:35px}.about-story-copy{min-height:620px}.inner-footer{min-height:650px}.portfolio-collections{min-height:0;padding:70px 24px;grid-template-columns:1fr;gap:70px}.portfolio-project,.portfolio-project:nth-child(even){width:82%;justify-self:start;margin-top:0}.portfolio-project:nth-child(even){justify-self:end}.portfolio-project img{height:360px}}
