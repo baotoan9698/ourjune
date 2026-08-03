@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 
-const nav = ["Home", "About", "Testimonials", "Portfolio", "Contact"];
+const nav = [
+  ["Home", "/"],
+  ["About", "/about"],
+  ["Service", "/service"],
+  ["Testimonials", "/testimonials"],
+  ["Gallery", "/gallery"],
+  ["Contact", "/contact"],
+];
 
 const testimonials = [
   {
@@ -53,9 +60,9 @@ export default function Home() {
             <span />
           </button>
           <nav className={menuOpen ? "nav open" : "nav"}>
-            {nav.map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>
-                {item}{item === "Portfolio" && <i />}
+            {nav.map(([item, href]) => (
+              <a key={href} href={href} onClick={() => setMenuOpen(false)}>
+                {item}
               </a>
             ))}
           </nav>
