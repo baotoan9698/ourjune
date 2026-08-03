@@ -47,11 +47,13 @@
 .gallery-hero-copy { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:8%; }
 .gallery-hero h1 { margin:0; font:500 clamp(58px,6vw,90px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
 .gallery-hero p { max-width:480px; font:300 12px/20px "Roboto Mono",monospace; }
-.masonry { padding:90px 3.2% 120px; columns:3 280px; column-gap:28px; }
-.masonry img { width:100%; margin:0 0 28px; break-inside:avoid; object-fit:cover; filter:saturate(.78); }
-.masonry img:nth-child(3n+1) { height:360px; }
-.masonry img:nth-child(3n+2) { height:260px; }
-.masonry img:nth-child(3n) { height:420px; }
+.masonry { padding:90px 3.2% 120px; display:flex; flex-wrap:wrap; align-items:flex-start; gap:28px; }
+.masonry img,.masonry img:nth-child(3n+1),.masonry img:nth-child(3n+2),.masonry img:nth-child(3n) { display:block; flex:none; height:auto; margin:0; aspect-ratio:1/1; object-fit:cover; filter:saturate(.78); }
+.masonry img:nth-child(1),.masonry img:nth-child(6) { width:calc((100% - 56px) * 16 / 34); aspect-ratio:16/9; }
+.masonry img:nth-child(2),.masonry img:nth-child(3),.masonry img:nth-child(7),.masonry img:nth-child(8) { width:calc((100% - 56px) * 9 / 34); }
+.masonry img:nth-child(4),.masonry img:nth-child(5) { width:calc((100% - 28px) / 2); aspect-ratio:16/9; }
+.masonry img:nth-child(9),.masonry img:nth-child(11) { width:calc((100% - 56px) * 16 / 41); aspect-ratio:16/9; }
+.masonry img:nth-child(10) { width:calc((100% - 56px) * 9 / 41); }
 
 /* Service */
 .service-hero { min-height:700px; position:relative; display:flex; align-items:flex-end; padding:55px 3.2%; background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.64)),url('/horizontal-1.jpg') center/cover; }
@@ -85,16 +87,30 @@
 .portfolio-hero-copy { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:8%; filter:none; }
 .portfolio-hero h1 { margin:0; font:500 clamp(58px,6vw,92px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
 .portfolio-hero p { max-width:480px; margin:0; font:300 12px/21px "Roboto Mono",monospace; }
-.portfolio-collections { min-height:1050px; padding:100px 12%; display:grid; grid-template-columns:1fr 1fr; gap:80px 18%; align-items:start; }
-.portfolio-project { width:72%; display:block; }
-.portfolio-project:nth-child(even) { justify-self:end; }
-.portfolio-project:nth-child(3) { margin-top:30px; }
-.portfolio-project:nth-child(4) { margin-top:80px; }
+.portfolio-collections { min-height:1240px; max-width:1280px; margin:0 auto; padding:110px 8% 140px; display:grid; grid-template-columns:1fr 1fr; gap:90px 15%; align-items:start; }
+.portfolio-project { display:block; }
+.portfolio-project.project-1 { width:58%; margin:55px 0 0 8%; }
+.portfolio-project.project-2 { width:78%; justify-self:end; }
+.portfolio-project.project-3 { width:82%; margin-top:10px; }
+.portfolio-project.project-4 { width:55%; margin-top:95px; justify-self:end; }
 .portfolio-project span { display:block; margin-bottom:12px; color:#888; font:300 9px/1 "Roboto Mono",monospace; }
-.portfolio-project img { width:100%; height:330px; object-fit:cover; filter:saturate(.6); transition:filter .35s,transform .5s; }
+.portfolio-project img { width:100%; object-fit:cover; filter:saturate(.6); transition:filter .35s,transform .5s; }
+.portfolio-project.project-1 img { height:310px; }
+.portfolio-project.project-2 img { height:430px; }
+.portfolio-project.project-3 img { height:440px; }
+.portfolio-project.project-4 img { height:295px; }
 .portfolio-project:hover img { filter:saturate(1); transform:scale(1.015); }
 .portfolio-project h2 { margin:14px 0 0; text-align:right; font:500 24px/1 "Archivo",sans-serif; letter-spacing:-.6px; }
 .portfolio-page .image-contact { min-height:520px; background-image:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.58)),url('/hero-alt.jpg'); background-size:cover; background-position:center; }
 
 @media(max-width:800px){
   .subpage-main{padding-top:86px}.page-intro,.about-hero-grid,.about-story,.contact-page-head,.contact-layout,.gallery-hero-copy,.service-hero-copy,.approach,.portfolio-hero-copy{grid-template-columns:1fr}.page-intro{min-height:270px;gap:55px}.page-title{justify-self:start;text-align:left}.about-hero-grid{gap:50px}.about-hero-grid img{width:80%}.about-story>img{height:500px}.about-columns{grid-template-columns:1fr}.about-services{grid-template-columns:1fr}.about-services img{height:430px}.contact-page-head{gap:60px}.contact-details{justify-self:start}.contact-layout{padding:0 24px 100px;gap:70px}.gallery-hero,.service-hero,.portfolio-hero{min-height:620px}.gallery-hero-copy,.service-hero-copy,.portfolio-hero-copy{gap:45px}.masonry{columns:1;padding:55px 24px}.packages,.testimonials-grid{grid-template-columns:1fr;padding:70px 24px;gap:70px}.testimonial-item:nth-child(3n+2){margin-top:0}.faq{padding:70px 24px}.faq-row{grid-template-columns:1fr;gap:18px}.inner-contact{grid-template-columns:1fr;gap:35px}.about-story-copy{min-height:620px}.inner-footer{min-height:650px}.portfolio-collections{min-height:0;padding:70px 24px;grid-template-columns:1fr;gap:70px}.portfolio-project,.portfolio-project:nth-child(even){width:82%;justify-self:start;margin-top:0}.portfolio-project:nth-child(even){justify-self:end}.portfolio-project img{height:360px}}
+
+@media(max-width:800px){
+  .portfolio-project.project-1,.portfolio-project.project-2,.portfolio-project.project-3,.portfolio-project.project-4{width:82%;margin-top:0;margin-left:0;}
+  .portfolio-project.project-1 img,.portfolio-project.project-2 img,.portfolio-project.project-3 img,.portfolio-project.project-4 img{height:360px;}
+  .masonry{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:55px 12px;columns:auto;}
+  .masonry img,.masonry img:nth-child(3n+1),.masonry img:nth-child(3n+2),.masonry img:nth-child(3n){grid-column:auto;height:auto;margin:0;aspect-ratio:1/1;object-fit:cover;}
+  .masonry img:nth-child(1),.masonry img:nth-child(2),.masonry img:nth-child(3),.masonry img:nth-child(4),.masonry img:nth-child(5),.masonry img:nth-child(6),.masonry img:nth-child(7),.masonry img:nth-child(8),.masonry img:nth-child(9),.masonry img:nth-child(10),.masonry img:nth-child(11){grid-column:auto;width:100%;aspect-ratio:1/1;}
+  .masonry img:nth-child(1),.masonry img:nth-child(4),.masonry img:nth-child(7){grid-column:1/-1;aspect-ratio:16/9;}
+}
