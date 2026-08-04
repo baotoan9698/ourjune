@@ -16,6 +16,11 @@ create table if not exists public.site_content (
 alter table public.admin_users enable row level security;
 alter table public.site_content enable row level security;
 
+drop policy if exists "Admins can read own membership" on public.admin_users;
+create policy "Admins can read own membership"
+on public.admin_users for select to authenticated
+using (user_id = auth.uid());
+
 drop policy if exists "Public can read published content" on public.site_content;
 create policy "Public can read published content"
 on public.site_content for select

@@ -131,7 +131,9 @@ export default function AdminPage() {
     setSaving(true); setMessage("");
     const { error } = await supabase.from("site_content").update({ value: draft, updated_at: new Date().toISOString() }).eq("key", active.key);
     setSaving(false);
-    if (error) return setMessage(`Không lưu được: ${error.message}`);
+    if (error) return setMessage(error.code === "42501"
+      ? "Tài khoản này chưa có quyền admin. Hãy thêm tài khoản vào bảng admin_users và kiểm tra policy RLS."
+      : `Không lưu được: ${error.message}`);
     setRows(current => current.map(row => row.key === active.key ? { ...row, value: structuredClone(draft) } : row));
     setMessage("Đã lưu và xuất bản thành công.");
   }
