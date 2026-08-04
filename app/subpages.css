@@ -43,7 +43,7 @@
 .contact-layout>img { height:410px; object-fit:cover; }
 
 /* Gallery */
-.gallery-hero { min-height:680px; position:relative; display:flex; align-items:flex-end; padding:55px 3.2%; background:linear-gradient(180deg,transparent 48%,rgba(0,0,0,.68)),url('/horizontal-3.jpg') center/cover; }
+.gallery-hero { min-height:100svh; position:relative; display:flex; align-items:flex-end; padding:55px 3.2%; background:linear-gradient(180deg,transparent 48%,rgba(0,0,0,.68)),url('/horizontal-3.jpg') center/cover; }
 .gallery-hero-copy { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:8%; }
 .gallery-hero h1 { margin:0; font:500 clamp(58px,6vw,90px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
 .gallery-hero p { max-width:480px; font:300 12px/20px "Roboto Mono",monospace; }
@@ -113,4 +113,5 @@
   .masonry img,.masonry img:nth-child(3n+1),.masonry img:nth-child(3n+2),.masonry img:nth-child(3n){grid-column:auto;height:auto;margin:0;aspect-ratio:1/1;object-fit:cover;}
   .masonry img:nth-child(1),.masonry img:nth-child(2),.masonry img:nth-child(3),.masonry img:nth-child(4),.masonry img:nth-child(5),.masonry img:nth-child(6),.masonry img:nth-child(7),.masonry img:nth-child(8),.masonry img:nth-child(9),.masonry img:nth-child(10),.masonry img:nth-child(11){grid-column:auto;width:100%;aspect-ratio:1/1;}
   .masonry img:nth-child(1),.masonry img:nth-child(4),.masonry img:nth-child(7){grid-column:1/-1;aspect-ratio:16/9;}
+  .gallery-hero{min-height:100svh;}
 }
