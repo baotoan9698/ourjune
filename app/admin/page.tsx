@@ -1,0 +1,154 @@
+"use client";
+
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getBrowserSupabase } from "../../lib/supabase";
+import "./admin.css";
+
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+type ContentRow = { key: string; page: string; label: string; value: JsonValue; sort_order: number };
+
+const imageKey = /(image|images|hero|photo|portrait|background)/i;
+
+function setAtPath(source: JsonValue, path: (string | number)[], next: JsonValue): JsonValue {
+  if (!path.length) return next;
+  const [head, ...tail] = path;
+  if (Array.isArray(source)) {
+    const copy = [...source];
+    copy[Number(head)] = setAtPath(copy[Number(head)], tail, next);
+    return copy;
+  }
+  const copy = { ...(source as Record<string, JsonValue>) };
+  copy[String(head)] = setAtPath(copy[String(head)], tail, next);
+  return copy;
+}
+
+function removeAtPath(source: JsonValue, path: (string | number)[]): JsonValue {
+  const parent = path.slice(0, -1);
+  const index = Number(path[path.length - 1]);
+  let target: JsonValue = source;
+  for (const part of parent) target = Array.isArray(target) ? target[Number(part)] : (target as Record<string, JsonValue>)[String(part)];
+  if (!Array.isArray(target)) return source;
+  const next = target.filter((_, i) => i !== index);
+  return setAtPath(source, parent, next);
+}
+
+function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploading }: {
+  name: string; value: JsonValue; path: (string | number)[];
+  onChange: (path: (string | number)[], value: JsonValue) => void;
+  onRemove?: () => void;
+  onUpload: (path: (string | number)[], file: File) => void;
+  uploading: string;
+}) {
+  const pathId = path.join(".");
+  if (Array.isArray(value)) return <fieldset className="admin-group">
+    <legend>{name}</legend>
+    <div className="admin-array">
+      {value.map((item, index) => <div className="admin-array-item" key={`${pathId}-${index}`}>
+        <FieldEditor name={`${name} ${index + 1}`} value={item} path={[...path, index]} onChange={onChange} onRemove={() => onChange(path, removeAtPath(value, [index]))} onUpload={onUpload} uploading={uploading} />
+      </div>)}
+    </div>
+    <button type="button" className="admin-secondary" onClick={() => onChange(path, [...value, value.length ? structuredClone(value[value.length - 1]) : ""])}>+ Thêm mục</button>
+  </fieldset>;
+
+  if (value && typeof value === "object") return <fieldset className="admin-group">
+    <legend>{name}</legend>
+    {Object.entries(value).map(([key, child]) => <FieldEditor key={key} name={key} value={child} path={[...path, key]} onChange={onChange} onUpload={onUpload} uploading={uploading} />)}
+    {onRemove && <button type="button" className="admin-danger-link" onClick={onRemove}>Xóa mục này</button>}
+  </fieldset>;
+
+  if (typeof value === "boolean") return <label className="admin-check"><input type="checkbox" checked={value} onChange={e => onChange(path, e.target.checked)} />{name}</label>;
+
+  const isImage = imageKey.test(name) || path.some(part => imageKey.test(String(part)));
+  const text = String(value ?? "");
+  return <label className="admin-field"><span>{name}</span>
+    {text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
+    {isImage && <div className="admin-media-row">
+      {text && <img src={text} alt="Xem trước" />}
+      <label className="admin-upload">{uploading === pathId ? "Đang tải…" : "Tải hình mới"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={Boolean(uploading)} onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(path, file); event.target.value = ""; }} /></label>
+    </div>}
+    {onRemove && <button type="button" className="admin-danger-link" onClick={onRemove}>Xóa mục này</button>}
+  </label>;
+}
+
+export default function AdminPage() {
+  const router = useRouter();
+  const [rows, setRows] = useState<ContentRow[]>([]);
+  const [selected, setSelected] = useState("");
+  const [draft, setDraft] = useState<JsonValue>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState("");
+  const [message, setMessage] = useState("");
+
+  const load = useCallback(async () => {
+    const supabase = getBrowserSupabase();
+    if (!supabase) { setLoading(false); return; }
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session) return router.replace("/admin/login");
+    const { data, error } = await supabase.from("site_content").select("key,page,label,value,sort_order").order("page").order("sort_order");
+    if (error) setMessage("Không đọc được dữ liệu. Hãy kiểm tra bước SQL và quyền admin.");
+    const content = (data ?? []) as ContentRow[];
+    setRows(content);
+    if (content.length) {
+      setSelected(current => current || content[0].key);
+      setDraft(current => Object.keys(current as object).length ? current : structuredClone(content[0].value));
+    }
+    setLoading(false);
+  }, [router]);
+
+  useEffect(() => { load(); }, [load]);
+  const active = useMemo(() => rows.find(row => row.key === selected), [rows, selected]);
+
+  function choose(key: string) {
+    const row = rows.find(item => item.key === key);
+    if (!row) return;
+    setSelected(key); setDraft(structuredClone(row.value)); setMessage("");
+  }
+
+  function update(path: (string | number)[], value: JsonValue) { setDraft(current => setAtPath(current, path, value)); }
+
+  async function upload(path: (string | number)[], file: File) {
+    if (file.size > 10 * 1024 * 1024) return setMessage("Hình phải nhỏ hơn 10 MB.");
+    const supabase = getBrowserSupabase();
+    if (!supabase) return;
+    const pathId = path.join("."); setUploading(pathId); setMessage("");
+    const safe = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
+    const storagePath = `${selected}/${Date.now()}-${safe}`;
+    const { error } = await supabase.storage.from("site-media").upload(storagePath, file, { cacheControl: "31536000", upsert: false });
+    if (error) setMessage(`Không tải được hình: ${error.message}`);
+    else {
+      const { data } = supabase.storage.from("site-media").getPublicUrl(storagePath);
+      update(path, data.publicUrl);
+      setMessage("Đã tải hình. Nhấn Lưu thay đổi để xuất bản.");
+    }
+    setUploading("");
+  }
+
+  async function save() {
+    const supabase = getBrowserSupabase();
+    if (!supabase || !active) return;
+    setSaving(true); setMessage("");
+    const { error } = await supabase.from("site_content").update({ value: draft, updated_at: new Date().toISOString() }).eq("key", active.key);
+    setSaving(false);
+    if (error) return setMessage(`Không lưu được: ${error.message}`);
+    setRows(current => current.map(row => row.key === active.key ? { ...row, value: structuredClone(draft) } : row));
+    setMessage("Đã lưu và xuất bản thành công.");
+  }
+
+  async function signOut() { await getBrowserSupabase()?.auth.signOut(); router.replace("/admin/login"); }
+
+  if (loading) return <main className="admin-shell admin-loading">Đang mở Content Studio…</main>;
+  return <main className="admin-shell admin-dashboard">
+    <aside className="admin-sidebar">
+      <div><a href="/" className="admin-brand">OUR JUNE</a><span className="admin-kicker">CONTENT STUDIO</span></div>
+      <nav>{rows.map(row => <button className={selected === row.key ? "active" : ""} key={row.key} onClick={() => choose(row.key)}><small>{row.page}</small>{row.label}</button>)}</nav>
+      <button className="admin-signout" onClick={signOut}>Đăng xuất</button>
+    </aside>
+    <section className="admin-workspace">
+      <header><div><span className="admin-kicker">{active?.page ?? "SETUP"}</span><h1>{active?.label ?? "Chưa có dữ liệu"}</h1></div><div className="admin-actions"><a href={active?.key.startsWith("gallery-") ? `/${active.key}` : "/"} target="_blank">Xem trang ↗</a><button className="admin-primary" disabled={saving || !active} onClick={save}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button></div></header>
+      {message && <div className="admin-notice">{message}</div>}
+      {!active ? <div className="admin-empty"><h2>Chưa kết nối dữ liệu</h2><p>Chạy file <code>supabase/schema.sql</code> trong Supabase SQL Editor, sau đó tải lại trang.</p></div> : <div className="admin-editor"><FieldEditor name={active.label} value={draft} path={[]} onChange={update} onUpload={upload} uploading={uploading} /></div>}
+    </section>
+  </main>;
+}

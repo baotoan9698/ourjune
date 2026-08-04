@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getBrowserSupabase } from "../lib/supabase";
 
 const nav = [
   ["Home", "/"],
@@ -32,23 +33,42 @@ const testimonials = [
   },
 ];
 
+const homeFallback = {
+  heroTitle: "Photographs of love,\njoy, and moments of\nlife that feel like a\nmovie",
+  heroDescription: "Moody, cinematic, and deeply atmospheric, our photography renders the feeling within every moment — how it unfolds, how it lingers.",
+  heroImage: "/hero.jpg", storyLabel: "01 — THE STORY", aboutTitle: "About us",
+  aboutText1: "Hello! We're Alex and Emma, a husband-and-wife duo based in Joshua Tree, California. We fell in love with this place, the raw beauty of the desert, and its quiet vastness.",
+  aboutText2: "For us, photography means connection — with one another, with nature, and with parts of yourself you have yet to discover.",
+  aboutImage1: "/portrait-1.jpg", aboutImage2: "/portrait-2.jpg", testimonials,
+  quote: "Mystery is not about traveling to new places but about looking with new eyes.", quoteAuthor: "MARCEL PROUST",
+  worksLabel: "02 — SELECTED STORIES", worksTitle: "Our Works", worksDescription: "A collection of honest moments, quiet gestures, and stories that deserve to live beyond the day they happened.",
+  works: [{title:"Portraits",image:"/portrait-4.jpg",href:"/gallery-2"},{title:"Love Stories",image:"/horizontal-1.jpg",href:"/gallery-1"},{title:"Weddings",image:"/vertical-2.jpg",href:"/gallery-3"}],
+  contactTitle: "Get in touch", contactText: "Send us a message, and we'll set up a free discovery call to start planning your dream elopement.", contactEmail: "hello@ourjune.photo",
+  footerImages: ["/portrait-1.jpg","/portrait-4.jpg","/horizontal-3.jpg","/hero.jpg"], instagramHandle: "@OURJUNE", copyright: "© 2026 OUR JUNE",
+};
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
-  const testimonial = testimonials[testimonialIndex];
+  const [content, setContent] = useState(homeFallback);
+  const activeTestimonials = content.testimonials.length ? content.testimonials : testimonials;
+  const testimonial = activeTestimonials[testimonialIndex % activeTestimonials.length];
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 24);
     updateHeader();
     window.addEventListener("scroll", updateHeader, { passive: true });
+    getBrowserSupabase()?.from("site_content").select("value").eq("key", "home").maybeSingle().then(({ data }) => {
+      if (data?.value) setContent(data.value as typeof homeFallback);
+    });
     return () => window.removeEventListener("scroll", updateHeader);
   }, []);
 
   return (
     <main>
-      <section className="hero" id="home">
+      <section className="hero" id="home" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.5)),url("${content.heroImage}")`}}>
         <header className={`site-header${scrolled ? " scrolled" : ""}`}>
           <a className="logo" href="#home">OUR JUNE</a>
           <button
@@ -73,23 +93,23 @@ export default function Home() {
           </nav>
         </header>
         <div className="hero-copy">
-          <h1>Photographs of love,<br />joy, and moments of<br />life that feel like a<br />movie</h1>
-          <p>Moody, cinematic, and deeply atmospheric, our photography renders the feeling within every moment — how it unfolds, how it lingers. We create images that go beyond the surface and feel as immersive as the memories themselves.</p>
+          <h1>{content.heroTitle.split("\n").map(line=><span key={line}>{line}<br/></span>)}</h1>
+          <p>{content.heroDescription}</p>
         </div>
         <a className="scroll-cue" href="#about" aria-label="Scroll to about">↓</a>
       </section>
 
       <section className="about section-pad" id="about">
-        <div className="section-kicker">01 — THE STORY</div>
+        <div className="section-kicker">{content.storyLabel}</div>
         <div className="about-grid">
           <div className="image-stack">
-            <img className="about-tall" src="/portrait-1.jpg" alt="Couple in the desert" />
-            <img className="about-small" src="/portrait-2.jpg" alt="Intimate portrait" />
+            <img className="about-tall" src={content.aboutImage1} alt="Couple in the desert" />
+            <img className="about-small" src={content.aboutImage2} alt="Intimate portrait" />
           </div>
           <div className="about-copy">
-            <h2>About us</h2>
-            <p>Hello! We&apos;re Alex and Emma, a husband-and-wife duo based in Joshua Tree, California. We fell in love with this place, the raw beauty of the desert, and its quiet vastness. That sense of depth and stillness shapes everything we do in our work.</p>
-            <p>For us, photography means connection — with one another, with nature, and with parts of yourself you have yet to discover. Feel the same way? Let&apos;s get to know each other better!</p>
+            <h2>{content.aboutTitle}</h2>
+            <p>{content.aboutText1}</p>
+            <p>{content.aboutText2}</p>
             <a className="text-link" href="#contact">Read More <span>↗</span></a>
           </div>
         </div>
@@ -104,13 +124,13 @@ export default function Home() {
             <div className="testimonial-controls">
               <button
                 aria-label="Previous testimonial"
-                onClick={() => setTestimonialIndex((testimonialIndex - 1 + testimonials.length) % testimonials.length)}
+                onClick={() => setTestimonialIndex((testimonialIndex - 1 + activeTestimonials.length) % activeTestimonials.length)}
               >
                 ←
               </button>
               <button
                 aria-label="Next testimonial"
-                onClick={() => setTestimonialIndex((testimonialIndex + 1) % testimonials.length)}
+                onClick={() => setTestimonialIndex((testimonialIndex + 1) % activeTestimonials.length)}
               >
                 →
               </button>
@@ -123,53 +143,39 @@ export default function Home() {
       </section>
 
       <section className="quote">
-        <p>Mystery is not about traveling to new places but about looking with new eyes.</p>
-        <span>MARCEL PROUST</span>
+        <p>{content.quote}</p>
+        <span>{content.quoteAuthor}</span>
       </section>
 
       <section className="works section-pad" id="portfolio">
         <div className="works-head">
           <div>
-            <span className="section-kicker">02 — SELECTED STORIES</span>
-            <h2>Our Works</h2>
+            <span className="section-kicker">{content.worksLabel}</span>
+            <h2>{content.worksTitle}</h2>
           </div>
-          <p>A collection of honest moments, quiet gestures, and stories that deserve to live beyond the day they happened.</p>
+          <p>{content.worksDescription}</p>
         </div>
         <div className="gallery">
-          <a className="work-card card-portrait" href="#contact">
-            <img src="/portrait-4.jpg" alt="Editorial portrait" />
-            <span><b>01</b> Portraits <i>↗</i></span>
-          </a>
-          <a className="work-card card-love" href="#contact">
-            <img src="/horizontal-1.jpg" alt="Love story" />
-            <span><b>02</b> Love Stories <i>↗</i></span>
-          </a>
-          <a className="work-card card-wedding" href="#contact">
-            <img src="/vertical-2.jpg" alt="Wedding moment" />
-            <span><b>03</b> Weddings <i>↗</i></span>
-          </a>
+          {content.works.map((work,index)=><a className={`work-card ${["card-portrait","card-love","card-wedding"][index] ?? ""}`} href={work.href} key={work.title}><img src={work.image} alt={work.title}/><span><b>{String(index+1).padStart(2,"0")}</b> {work.title} <i>↗</i></span></a>)}
         </div>
         <a className="outline-button" href="#contact">See Portfolio <span>↗</span></a>
       </section>
 
       <section className="contact" id="contact">
         <div className="contact-content">
-          <h2>Get in touch</h2>
-          <p>Send us a message, and we&apos;ll set up a free discovery call to start planning your dream elopement.</p>
-          <a className="light-button" href="mailto:hello@ourjune.photo">Let&apos;s Connect</a>
+          <h2>{content.contactTitle}</h2>
+          <p>{content.contactText}</p>
+          <a className="light-button" href={`mailto:${content.contactEmail}`}>Let&apos;s Connect</a>
         </div>
       </section>
 
       <footer className="site-footer">
         <div className="footer-gallery" aria-label="Selected Instagram photographs">
-          <img src="/portrait-1.jpg" alt="Our June wedding story" />
-          <img src="/portrait-4.jpg" alt="Our June couple portrait" />
-          <img src="/horizontal-3.jpg" alt="Our June beach ceremony" />
-          <img src="/hero.jpg" alt="Our June cinematic wedding" />
+          {content.footerImages.map((image,index)=><img src={image} alt={`Our June story ${index+1}`} key={`${image}-${index}`}/>)}
         </div>
         <div className="footer-social">
           <span>FOLLOW US ON INSTAGRAM</span>
-          <a className="instagram-handle" href="https://www.instagram.com/">@OURJUNE</a>
+          <a className="instagram-handle" href="https://www.instagram.com/">{content.instagramHandle}</a>
           <div className="social-links">
             <a className="facebook-icon" href="https://www.facebook.com/" aria-label="Facebook">f</a>
             <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram">
@@ -178,7 +184,7 @@ export default function Home() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2026 OUR JUNE</p>
+          <p>{content.copyright}</p>
           <a href="#home" aria-label="Back to top">↑</a>
         </div>
       </footer>
