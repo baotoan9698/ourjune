@@ -8,16 +8,34 @@ export const metadata: Metadata = {
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : "http://localhost:3000",
   ),
-  title: "Our June — Cinematic Wedding Photography",
-  description: "Moody, cinematic photography for couples wildly in love.",
-  icons: { icon: "/favicon.ico" },
+  title: "Ourjune | Unscripted Moments, Elegantly Captured",
+  description: "Fine art wedding photography by ourjune. Capturing genuine emotions with timeless elegance. Preserving your authentic love story through refined art.",
+  applicationName: "Ourjune",
+  alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/favicon.png", type: "image/png", sizes: "1024x1024" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
   openGraph: {
-    title: "Our June — Cinematic Wedding Photography",
-    description: "Photographs of love, joy, and moments of life that feel like a movie.",
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "Ourjune",
+    title: "Ourjune | Unscripted Moments, Elegantly Captured",
+    description: "Fine art wedding photography by ourjune. Capturing genuine emotions with timeless elegance. Preserving your authentic love story through refined art.",
+    images: [{ url: "/og-image.jpg", width: 2048, height: 1366, alt: "Ourjune fine art wedding photography" }],
   },
   twitter: {
     card: "summary_large_image",
+    title: "Ourjune | Unscripted Moments, Elegantly Captured",
+    description: "Fine art wedding photography by ourjune. Capturing genuine emotions with timeless elegance. Preserving your authentic love story through refined art.",
+    images: ["/og-image.jpg"],
   },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
