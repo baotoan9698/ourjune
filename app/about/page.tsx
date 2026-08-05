@@ -1,5 +1,6 @@
 import { getSiteContent } from "../../lib/content";
 import { ContactCta, SiteFooter, SiteHeader } from "../components/SiteChrome";
+import { ClientSaySlider } from "./ClientSaySlider";
 
 const fallback = {
   label: "About us", title: "We're so happy\nyou're here",
@@ -11,17 +12,37 @@ const fallback = {
   storyImage: "/portrait-4.jpg", clientLabel: "Clients say",
   clientQuote: "Alex and Emma were amazing from start to finish. They made us feel so at ease, and it's clear they genuinely care about their clients.",
   clientName: "BRIE & SOREN JACKSON", servicesLabel: "What we do",
+  clientReviews: [
+    { quote: "Alex and Emma were amazing from start to finish. They made us feel so at ease, and it's clear they genuinely care about their clients.", name: "BRIE & SOREN JACKSON" },
+    { quote: "Every moment felt natural and completely unforced. Our photographs carry the warmth, movement, and emotion we remember from that day.", name: "MAYA & DEVON" },
+    { quote: "They understood our story from the very first conversation and created photographs that feel honest, cinematic, and unmistakably like us.", name: "JENNIFER & THEO" },
+  ],
   services: "Portraits\nWeddings\nLove Stories\nCommercial", servicesImage: "/horizontal-1.jpg",
 };
 
 export const dynamic = "force-dynamic";
 export default async function AboutPage() {
   const c = await getSiteContent("about", fallback);
-  return <main className="subpage" id="top"><SiteHeader/><div className="subpage-main">
+  const reviews = c.clientReviews?.length ? c.clientReviews : [
+    { quote: c.clientQuote, name: c.clientName },
+    ...fallback.clientReviews.slice(1),
+  ];
+  return <main className="subpage about-page" id="top"><SiteHeader/><div className="subpage-main">
     <section className="page-intro"><span className="page-label">{c.label}</span><h1 className="page-title">{c.title.split("\n").map((line,i)=><span key={line}>{line}{i<c.title.split("\n").length-1&&<br/>}</span>)}</h1></section>
     <section className="about-hero-grid"><img src={c.introImage} alt="Our June photographers"/><p>{c.introText}</p></section>
-    <section className="about-story"><div className="about-story-copy"><h2>{c.storyTitle}</h2><div className="about-columns"><p>{c.storyText1}</p><p>{c.storyText2}</p></div></div><img src={c.storyImage} alt="Our June photographers"/></section>
-    <section className="client-say"><span className="page-label">{c.clientLabel}</span><blockquote>{c.clientQuote}</blockquote><cite>{c.clientName}</cite></section>
+    <section className="alex-emma-section">
+      <div className="alex-emma-content">
+        <h2>{c.storyTitle}</h2>
+        <div className="alex-emma-text">
+          <p>{c.storyText1}</p>
+          <p>{c.storyText2}</p>
+        </div>
+      </div>
+      <div className="alex-emma-image-frame">
+        <img className="alex-emma-image" src={c.storyImage} alt="Alex and Emma"/>
+      </div>
+    </section>
+    <ClientSaySlider label={c.clientLabel} reviews={reviews}/>
     <section className="about-services"><img src={c.servicesImage} alt="Our June services"/><div><span className="page-label">{c.servicesLabel}</span><h3>{c.services.split("\n").map(line=><span key={line}>{line}<br/></span>)}</h3></div></section>
     <ContactCta/><SiteFooter/>
   </div></main>;

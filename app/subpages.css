@@ -16,15 +16,25 @@
 .about-hero-grid { padding:25px 3.2% 90px; display:grid; grid-template-columns:1fr 1fr; gap:12%; align-items:end; }
 .about-hero-grid img { width:52%; height:300px; object-fit:cover; }
 .about-hero-grid p { max-width:480px; justify-self:end; font:300 13px/22px "Roboto Mono",monospace; }
-.about-story { display:grid; grid-template-columns:1.2fr .8fr; background:#111; }
-.about-story-copy { padding:70px 5%; display:flex; flex-direction:column; justify-content:space-between; }
-.about-story-copy h2 { margin:0; font:500 clamp(48px,5vw,76px)/1 "Archivo",sans-serif; }
-.about-columns { display:grid; grid-template-columns:1fr 1fr; gap:7%; }
-.about-columns p { font:300 12px/21px "Roboto Mono",monospace; }
-.about-story>img { height:650px; object-fit:cover; }
-.client-say { padding:90px 3.2%; min-height:420px; }
-.client-say blockquote { max-width:920px; margin:65px auto 35px; font:500 clamp(26px,3vw,42px)/1.15 "Archivo",sans-serif; }
+.alex-emma-section { height:clamp(560px,70svh,720px); padding:0 8.5% 0 4.6%; display:grid; grid-template-columns:minmax(0,1.6fr) minmax(360px,.95fr); gap:5%; overflow:hidden; background:#111; }
+.alex-emma-content { min-width:0; position:relative; padding:78px 0; }
+.alex-emma-content h2 { margin:0; color:#d7d5d3; font:500 clamp(38px,3.2vw,52px)/1 "Archivo",sans-serif; letter-spacing:-2px; }
+.alex-emma-text { position:absolute; top:57%; left:0; right:0; transform:translateY(-50%); display:grid; grid-template-columns:1fr 1fr; gap:12%; }
+.alex-emma-text p { margin:0; color:#d7d5d3; font:300 clamp(13px,1vw,15px)/1.75 "Roboto Mono",monospace; }
+.alex-emma-image-frame { height:100%; aspect-ratio:2/3; justify-self:end; overflow:hidden; }
+.alex-emma-image { display:block; width:100%; height:100%; object-fit:cover; object-position:center center; }
+.about-page .page-intro .page-label,.about-page .client-say>.page-label,.about-page .about-services .page-label { font-size:15px; letter-spacing:7px; }
+.about-page .page-title { font-size:clamp(48px,5.1vw,76px); }
+.client-say { box-sizing:border-box; width:100%; height:480px; min-height:480px; max-height:480px; padding:70px 3.2%; display:flex; flex-direction:column; overflow:hidden; }
+.client-say blockquote { width:100%; max-width:920px; margin:0 auto; align-self:center; font:500 clamp(26px,3vw,42px)/1.15 "Archivo",sans-serif; }
 .client-say cite { display:block; text-align:right; font:300 10px/15px "Roboto Mono",monospace; letter-spacing:1px; }
+.client-say-slide { min-height:0; height:100%; flex:1; display:grid; grid-template-rows:minmax(0,1fr) auto; overflow:hidden; animation:clientSayIn .45s ease both; }
+.client-say-footer { width:100%; max-width:920px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:30px; }
+.client-say-controls { display:flex; gap:24px; }
+.client-say-controls button { border:0; padding:5px; background:transparent; color:#d7d5d5; font:300 27px/1 "Roboto Mono",monospace; cursor:pointer; transition:transform .2s ease; }
+.client-say-controls button:hover { transform:translateX(-2px); }
+.client-say-controls button+button:hover { transform:translateX(2px); }
+@keyframes clientSayIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 .about-services { display:grid; grid-template-columns:2fr 1fr; background:#111; }
 .about-services img { height:560px; object-fit:cover; }
 .about-services div { padding:55px 12%; }
@@ -109,6 +119,15 @@
 @media(max-width:800px){
   .portfolio-project.project-1,.portfolio-project.project-2,.portfolio-project.project-3,.portfolio-project.project-4{width:92%;margin-top:0;margin-left:0;}
   .portfolio-project.project-1 img,.portfolio-project.project-2 img,.portfolio-project.project-3 img,.portfolio-project.project-4 img{height:400px;}
+  .alex-emma-section{height:auto;padding:60px 24px;grid-template-columns:1fr;gap:45px;}
+  .alex-emma-content{min-height:560px;padding:0;display:flex;flex-direction:column;justify-content:space-between;}
+  .alex-emma-text{position:static;transform:none;grid-template-columns:1fr;gap:24px;}
+  .alex-emma-image-frame{width:100%;height:auto;aspect-ratio:2/3;justify-self:stretch;}
+  .alex-emma-image{width:100%;height:100%;object-position:center center;}
+  .about-page .page-intro .page-label,.about-page .client-say>.page-label,.about-page .about-services .page-label{font-size:13px;letter-spacing:5px;}
+  .client-say{height:520px;min-height:520px;max-height:520px;padding:65px 24px;}
+  .client-say blockquote{font-size:clamp(22px,7vw,30px);overflow:hidden;}
+  .client-say-footer{align-items:flex-end;}
   .masonry{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:55px 12px;columns:auto;}
   .masonry img,.masonry img:nth-child(3n+1),.masonry img:nth-child(3n+2),.masonry img:nth-child(3n){grid-column:auto;height:auto;margin:0;aspect-ratio:1/1;object-fit:cover;}
   .masonry img:nth-child(1),.masonry img:nth-child(2),.masonry img:nth-child(3),.masonry img:nth-child(4),.masonry img:nth-child(5),.masonry img:nth-child(6),.masonry img:nth-child(7),.masonry img:nth-child(8),.masonry img:nth-child(9),.masonry img:nth-child(10),.masonry img:nth-child(11){grid-column:auto;width:100%;aspect-ratio:1/1;}
