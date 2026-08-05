@@ -181,6 +181,7 @@ export default function Home() {
             <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram">
               <span />
             </a>
+            <a className="whatsapp-icon" href="https://wa.me/84555583655" aria-label="WhatsApp" target="_blank" rel="noreferrer"><img src="/whatsapp-icon.png" alt="" /></a>
           </div>
         </div>
         <div className="footer-bottom">

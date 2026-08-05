@@ -69,6 +69,7 @@ export function SiteFooter() {
         <div className="social-links">
           <a className="facebook-icon" href="https://www.facebook.com/" aria-label="Facebook">f</a>
           <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram"><span /></a>
+          <a className="whatsapp-icon" href="https://wa.me/84555583655" aria-label="WhatsApp" target="_blank" rel="noreferrer"><img src="/whatsapp-icon.png" alt="" /></a>
         </div>
       </div>
       <div className="footer-bottom"><p>© 2026 OUR JUNE</p><a href="#top" aria-label="Back to top">↑</a></div>
