@@ -126,7 +126,10 @@
   .portfolio-project.project-1,.portfolio-project.project-2,.portfolio-project.project-3,.portfolio-project.project-4{width:92%;margin-top:0;margin-left:0;}
   .portfolio-project.project-1 img,.portfolio-project.project-2 img,.portfolio-project.project-3 img,.portfolio-project.project-4 img{height:400px;}
   .alex-emma-section{height:auto;padding:60px 24px;grid-template-columns:1fr;gap:45px;}
-  .alex-emma-content{min-height:560px;padding:0;display:flex;flex-direction:column;justify-content:space-between;}
+  .alex-emma-content{display:contents;}
+  .alex-emma-content h2{order:1;}
+  .alex-emma-image-frame{order:2;}
+  .alex-emma-text{order:3;}
   .alex-emma-text{position:static;transform:none;grid-template-columns:1fr;gap:24px;}
   .alex-emma-image-frame{width:100%;height:auto;aspect-ratio:2/3;justify-self:stretch;}
   .alex-emma-image{width:100%;height:100%;object-position:center center;}
