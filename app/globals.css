@@ -61,15 +61,15 @@ img { display:block; width:100%; object-fit:cover; }
 @keyframes bob { 50% { transform:translateY(7px); } }
 .section-pad { padding:130px 6.5%; }
 .section-kicker,.eyebrow { font:500 14px/25px "Roboto Mono", monospace; letter-spacing:2.2px; }
-.about { background:var(--paper); color:#121212; }
+.about { background:var(--black); color:#fff; }
 .about-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:11%; align-items:center; margin-top:60px; }
 .image-stack { position:relative; min-height:760px; }
 .about-tall { width:72%; height:700px; }
-.about-small { position:absolute; width:45%; height:310px; right:0; bottom:0; border:12px solid var(--paper); }
+.about-small { position:absolute; width:45%; height:310px; right:0; bottom:0; border:12px solid var(--black); }
 h2 { font-weight:400; letter-spacing:-4px; }
 .about-copy h2,.works h2,.contact h2 { font-size:clamp(68px,9vw,138px); line-height:.8; margin:0 0 65px; }
 .about-copy p { max-width:470px; font-size:14px; line-height:25px; margin:0 0 24px; }
-.text-link { display:inline-flex; gap:50px; align-items:center; margin-top:28px; padding-bottom:8px; border-bottom:1px solid #111; text-transform:uppercase; font:600 11px/1 "Roboto Mono", monospace; letter-spacing:2px; }
+.text-link { display:inline-flex; gap:50px; align-items:center; margin-top:28px; padding-bottom:8px; border-bottom:1px solid #fff; text-transform:uppercase; font:600 11px/1 "Roboto Mono", monospace; letter-spacing:2px; }
 .testimonial { height:min(760px,76vw); min-height:600px; position:relative; display:grid; grid-template-columns:35% 65%; background:#111; overflow:hidden; }
 .testimonial-card { background:#111; padding:55px 13% 58px; display:flex; flex-direction:column; }
 .testimonial-card .eyebrow { color:#d7d5d5; letter-spacing:6px; }
