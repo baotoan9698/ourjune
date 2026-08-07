@@ -123,7 +123,7 @@ export default function Home() {
             <h2>{content.aboutTitle}</h2>
             <p>{content.aboutText1}</p>
             <p>{content.aboutText2}</p>
-            <a className="text-link" href="#contact">Read More <span>↗</span></a>
+            <a className="text-link" href="/about">Read More <span>↗</span></a>
           </div>
         </div>
       </section>
@@ -171,7 +171,7 @@ export default function Home() {
         <div className="gallery">
           {content.works.map((work,index)=><a className={`work-card ${["card-portrait","card-love","card-wedding"][index] ?? ""}`} href={work.href} key={work.title}><img src={work.image} alt={work.title}/><span><b>{String(index+1).padStart(2,"0")}</b> {work.title} <i>↗</i></span></a>)}
         </div>
-        <a className="outline-button" href="#contact">See Portfolio <span>↗</span></a>
+        <a className="outline-button" href="/Portfolio">See Portfolio <span>↗</span></a>
       </section>
 
       <section className="contact" id="contact">
