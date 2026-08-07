@@ -58,8 +58,9 @@
 .gallery-hero-copy { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:8%; }
 .gallery-hero h1 { margin:0; font:500 clamp(58px,6vw,90px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
 .gallery-hero p { max-width:480px; font:300 14px/25px "Roboto Mono",monospace; }
-.masonry { padding:90px 3.2% 120px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.masonry { padding:90px 3.2% 5px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
 .masonry img { display:block; width:100%; height:auto; margin:0; aspect-ratio:2/3; object-fit:cover; object-position:center; }
+.masonry + .inner-contact { min-height:260px; padding:30px 3.2%; align-items:center; }
 
 /* Service */
 .service-hero { min-height:700px; position:relative; display:flex; align-items:flex-end; padding:55px 3.2%; background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.64)),url('/horizontal-1.jpg') center/cover; }
@@ -132,7 +133,8 @@
   .client-say{height:520px;min-height:520px;max-height:520px;padding:65px 24px;}
   .client-say blockquote{font-size:clamp(22px,7vw,30px);overflow:hidden;}
   .client-say-footer{align-items:flex-end;}
-  .masonry{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:55px 12px;}
+  .masonry{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:55px 12px 5px;}
+  .masonry + .inner-contact{min-height:320px;padding:24px 24px 45px;}
   .gallery-hero{min-height:100svh;}
 }
 
@@ -140,4 +142,8 @@
   .package-card-2 img{order:0;margin:38px 0 0;}
   .about-page .page-intro{min-height:230px;padding-bottom:25px;}
   .about-page .about-hero-grid p{justify-self:end;text-align:right;}
+}
+
+@media(max-width:1024px){
+  .masonry{grid-template-columns:repeat(3,minmax(0,1fr));}
 }
