@@ -13,11 +13,8 @@ export const metadata: Metadata = {
   applicationName: "Ourjune",
   alternates: { canonical: "/" },
   icons: {
-    icon: [
-      { url: "/favicon.ico", type: "image/x-icon" },
-      { url: "/favicon.png", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    shortcut: "/favicon.png",
     apple: "/favicon.png",
   },
   openGraph: {
