@@ -59,8 +59,17 @@
 .gallery-hero h1 { margin:0; font:500 clamp(58px,6vw,90px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
 .gallery-hero p { max-width:480px; font:300 14px/25px "Roboto Mono",monospace; }
 .masonry { padding:90px 3.2% 5px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.gallery-tile { display:block; width:100%; border:0; padding:0; background:transparent; cursor:zoom-in; }
 .masonry img { display:block; width:100%; height:auto; margin:0; aspect-ratio:2/3; object-fit:cover; object-position:center; }
 .masonry + .inner-contact { min-height:260px; padding:30px 3.2%; align-items:center; }
+.gallery-lightbox { position:fixed; inset:0; z-index:2000; display:grid; place-items:center; padding:28px; background:rgba(0,0,0,.94); cursor:zoom-out; animation:gallery-lightbox-in .25s ease both; }
+.gallery-lightbox>img { display:block; width:auto; max-width:94vw; height:auto; max-height:92vh; object-fit:contain; cursor:default; }
+.gallery-lightbox-close { position:fixed; top:22px; right:28px; z-index:1; border:0; padding:8px 12px; background:transparent; color:#fff; font:300 42px/1 "Roboto Mono",monospace; cursor:pointer; }
+.gallery-lightbox-nav { position:fixed; top:50%; z-index:1; width:56px; height:56px; transform:translateY(-50%); border:0; padding:0; background:transparent; color:#fff; font:300 27px/1 "Roboto Mono",monospace; cursor:pointer; transition:opacity .2s,transform .2s; }
+.gallery-lightbox-nav:hover { opacity:.65; }
+.gallery-lightbox-prev { left:24px; }
+.gallery-lightbox-next { right:24px; }
+@keyframes gallery-lightbox-in { from { opacity:0; } to { opacity:1; } }
 
 /* Service */
 .service-hero { min-height:700px; position:relative; display:flex; align-items:flex-end; padding:55px 3.2%; background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.64)),url('/horizontal-1.jpg') center/cover; }
@@ -146,4 +155,8 @@
 
 @media(max-width:1024px){
   .masonry{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .gallery-lightbox{padding:18px;}
+  .gallery-lightbox-nav{width:44px;height:44px;font-size:22px;}
+  .gallery-lightbox-prev{left:8px;}
+  .gallery-lightbox-next{right:8px;}
 }
