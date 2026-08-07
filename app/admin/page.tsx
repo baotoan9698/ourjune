@@ -10,6 +10,16 @@ type ContentRow = { key: string; page: string; label: string; value: JsonValue; 
 
 const imageKey = /(image|images|hero|photo|portrait|background)/i;
 
+function withGallerySlots(key: string, value: JsonValue): JsonValue {
+  const copy = structuredClone(value);
+  if (!key.startsWith("gallery-") || !copy || Array.isArray(copy) || typeof copy !== "object") return copy;
+  const gallery = copy as Record<string, JsonValue>;
+  const current = Array.isArray(gallery.images) ? gallery.images : [];
+  const source = current.length ? current : [typeof gallery.hero === "string" ? gallery.hero : ""];
+  gallery.images = Array.from({ length: 16 }, (_, index) => structuredClone(source[index % source.length]));
+  return gallery;
+}
+
 function setAtPath(source: JsonValue, path: (string | number)[], next: JsonValue): JsonValue {
   if (!path.length) return next;
   const [head, ...tail] = path;
@@ -60,8 +70,9 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
   if (typeof value === "boolean") return <label className="admin-check"><input type="checkbox" checked={value} onChange={e => onChange(path, e.target.checked)} />{name}</label>;
 
   const isImage = imageKey.test(name) || path.some(part => imageKey.test(String(part)));
+  const isGalleryImage = path.some(part => String(part) === "images");
   const text = String(value ?? "");
-  return <label className="admin-field"><span>{name}</span>
+  return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{name}</span>
     {text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
     {isImage && <div className="admin-media-row">
       {text && <img src={text} alt="Xem trước" />}
@@ -92,7 +103,7 @@ export default function AdminPage() {
     setRows(content);
     if (content.length) {
       setSelected(current => current || content[0].key);
-      setDraft(current => Object.keys(current as object).length ? current : structuredClone(content[0].value));
+      setDraft(current => Object.keys(current as object).length ? current : withGallerySlots(content[0].key, content[0].value));
     }
     setLoading(false);
   }, [router]);
@@ -103,7 +114,7 @@ export default function AdminPage() {
   function choose(key: string) {
     const row = rows.find(item => item.key === key);
     if (!row) return;
-    setSelected(key); setDraft(structuredClone(row.value)); setMessage("");
+    setSelected(key); setDraft(withGallerySlots(row.key, row.value)); setMessage("");
   }
 
   function update(path: (string | number)[], value: JsonValue) { setDraft(current => setAtPath(current, path, value)); }
