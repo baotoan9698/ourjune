@@ -52,22 +52,35 @@ export default function Home() {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
-  const [content, setContent] = useState(homeFallback);
-  const activeTestimonials = content.testimonials.length ? content.testimonials : testimonials;
-  const testimonial = activeTestimonials[testimonialIndex % activeTestimonials.length];
+  const [content, setContent] = useState<typeof homeFallback | null>(null);
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 24);
     updateHeader();
     window.addEventListener("scroll", updateHeader, { passive: true });
     getBrowserSupabase()?.from("site_content").select("value").eq("key", "home").maybeSingle().then(({ data }) => {
-      if (data?.value) setContent(data.value as typeof homeFallback);
+      if (data?.value) {
+        const nextContent = data.value as typeof homeFallback;
+        const heroImage = new Image();
+        const showContent = () => setContent(nextContent);
+        heroImage.addEventListener("load", showContent, { once: true });
+        heroImage.addEventListener("error", showContent, { once: true });
+        heroImage.src = nextContent.heroImage;
+        if (heroImage.complete) showContent();
+      }
     });
     return () => window.removeEventListener("scroll", updateHeader);
   }, []);
 
+  if (!content) {
+    return <main className="home-loading" aria-busy="true" aria-label="Loading Our June" />;
+  }
+
+  const activeTestimonials = content.testimonials.length ? content.testimonials : testimonials;
+  const testimonial = activeTestimonials[testimonialIndex % activeTestimonials.length];
+
   return (
-    <main>
+    <main className="home-content">
       <section className="hero" id="home" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.5)),url("${content.heroImage}")`}}>
         <header className={`site-header${scrolled ? " scrolled" : ""}`}>
           <a className="logo" href="#home">OUR JUNE</a>

@@ -28,6 +28,10 @@
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--black); color:#f2f1ed; font-family:"Roboto Mono", monospace; font-style:normal; font-weight:400; }
+.home-loading { min-height:100svh; background:var(--black); }
+.home-content { animation:home-reveal .9s ease-out both; }
+@keyframes home-reveal { from { opacity:0; } to { opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .home-content { animation:none; } }
 a { color:inherit; text-decoration:none; }
 img { display:block; width:100%; object-fit:cover; }
 
