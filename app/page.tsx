@@ -58,20 +58,31 @@ export default function Home() {
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 24);
+    const loadHomeContent = () => {
+      getBrowserSupabase()?.from("site_content").select("value").eq("key", "home").maybeSingle().then(({ data }) => {
+        if (data?.value) {
+          const nextContent = data.value as typeof homeFallback;
+          const heroImage = new Image();
+          const showContent = () => setContent(nextContent);
+          heroImage.addEventListener("load", showContent, { once: true });
+          heroImage.addEventListener("error", showContent, { once: true });
+          heroImage.src = nextContent.heroImage;
+          if (heroImage.complete) showContent();
+        }
+      });
+    };
+    const channel = new BroadcastChannel("ourjune-content");
+    channel.onmessage = event => { if (event.data?.key === "home") loadHomeContent(); };
+    const refreshWhenVisible = () => { if (document.visibilityState === "visible") loadHomeContent(); };
     updateHeader();
     window.addEventListener("scroll", updateHeader, { passive: true });
-    getBrowserSupabase()?.from("site_content").select("value").eq("key", "home").maybeSingle().then(({ data }) => {
-      if (data?.value) {
-        const nextContent = data.value as typeof homeFallback;
-        const heroImage = new Image();
-        const showContent = () => setContent(nextContent);
-        heroImage.addEventListener("load", showContent, { once: true });
-        heroImage.addEventListener("error", showContent, { once: true });
-        heroImage.src = nextContent.heroImage;
-        if (heroImage.complete) showContent();
-      }
-    });
-    return () => window.removeEventListener("scroll", updateHeader);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    loadHomeContent();
+    return () => {
+      window.removeEventListener("scroll", updateHeader);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+      channel.close();
+    };
   }, []);
 
   if (!content) {

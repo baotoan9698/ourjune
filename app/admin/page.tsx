@@ -7,6 +7,7 @@ import "./admin.css";
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 type ContentRow = { key: string; page: string; label: string; value: JsonValue; sort_order: number };
+type GalleryLinkOption = { label: string; value: string };
 
 function isImageField(name: string) {
   return /images?$/i.test(name) || /(^|_)(photo|portrait|background)$/i.test(name) || name.toLowerCase() === "hero";
@@ -62,19 +63,20 @@ function removeAtPath(source: JsonValue, path: (string | number)[]): JsonValue {
   return setAtPath(source, parent, next);
 }
 
-function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploading }: {
+function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploading, galleryLinks }: {
   name: string; value: JsonValue; path: (string | number)[];
   onChange: (path: (string | number)[], value: JsonValue) => void;
   onRemove?: () => void;
   onUpload: (path: (string | number)[], file: File) => void;
   uploading: string;
+  galleryLinks: GalleryLinkOption[];
 }) {
   const pathId = path.join(".");
   if (Array.isArray(value)) return <fieldset className="admin-group">
     <legend>{name}</legend>
     <div className="admin-array">
       {value.map((item, index) => <div className="admin-array-item" key={`${pathId}-${index}`}>
-        <FieldEditor name={`${name} ${index + 1}`} value={item} path={[...path, index]} onChange={onChange} onRemove={() => onChange(path, removeAtPath(value, [index]))} onUpload={onUpload} uploading={uploading} />
+        <FieldEditor name={`${name} ${index + 1}`} value={item} path={[...path, index]} onChange={onChange} onRemove={() => onChange(path, removeAtPath(value, [index]))} onUpload={onUpload} uploading={uploading} galleryLinks={galleryLinks} />
       </div>)}
     </div>
     <button type="button" className="admin-secondary" onClick={() => onChange(path, [...value, value.length ? structuredClone(value[value.length - 1]) : ""])}>+ Thêm mục</button>
@@ -82,7 +84,7 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
 
   if (value && typeof value === "object") return <fieldset className="admin-group">
     <legend>{name}</legend>
-    {Object.entries(value).map(([key, child]) => <FieldEditor key={key} name={key} value={child} path={[...path, key]} onChange={onChange} onUpload={onUpload} uploading={uploading} />)}
+    {Object.entries(value).map(([key, child]) => <FieldEditor key={key} name={key} value={child} path={[...path, key]} onChange={onChange} onUpload={onUpload} uploading={uploading} galleryLinks={galleryLinks} />)}
     {onRemove && <button type="button" className="admin-danger-link" onClick={onRemove}>Xóa mục này</button>}
   </fieldset>;
 
@@ -90,9 +92,10 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
 
   const isImage = isImageField(name) || path.some(part => isImageField(String(part)));
   const isGalleryImage = path.some(part => String(part) === "images");
+  const isWorkGalleryLink = name === "href" && path.some(part => String(part) === "works");
   const text = String(value ?? "");
   return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{fieldLabels[name] || name}</span>
-    {text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
+    {isWorkGalleryLink ? <select value={text} onChange={e => onChange(path, e.target.value)}>{galleryLinks.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select> : text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
     {isImage && <div className="admin-media-row">
       {text && <img src={text} alt="Xem trước" />}
       <label className="admin-upload">{uploading === pathId ? "Đang tải…" : "Tải hình mới"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={Boolean(uploading)} onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(path, file); event.target.value = ""; }} /></label>
@@ -129,6 +132,10 @@ export default function AdminPage() {
 
   useEffect(() => { load(); }, [load]);
   const active = useMemo(() => rows.find(row => row.key === selected), [rows, selected]);
+  const galleryLinks = useMemo<GalleryLinkOption[]>(() => rows.filter(row => row.key.startsWith("gallery-")).sort((a, b) => a.sort_order - b.sort_order).map(row => {
+    const value = row.value && !Array.isArray(row.value) && typeof row.value === "object" ? row.value as Record<string, JsonValue> : {};
+    return { label: String(value.menuTitle || value.title || row.label), value: `/${String(value.slug || row.key)}` };
+  }), [rows]);
 
   function choose(key: string) {
     const row = rows.find(item => item.key === key);
@@ -179,6 +186,9 @@ export default function AdminPage() {
       ? "Tài khoản này chưa có quyền admin. Hãy thêm tài khoản vào bảng admin_users và kiểm tra policy RLS."
       : `Không lưu được: ${error.message}`);
     setRows(current => current.map(row => row.key === active.key ? { ...row, value: structuredClone(valueToSave) } : row));
+    const channel = new BroadcastChannel("ourjune-content");
+    channel.postMessage({ key: active.key });
+    channel.close();
     setMessage("Đã lưu và xuất bản thành công.");
   }
 
@@ -194,7 +204,7 @@ export default function AdminPage() {
     <section className="admin-workspace">
       <header><div><span className="admin-kicker">{active?.page ?? "SETUP"}</span><h1>{active?.label ?? "Chưa có dữ liệu"}</h1></div><div className="admin-actions"><a href={active?.key.startsWith("gallery-") && draft && !Array.isArray(draft) && typeof draft === "object" ? `/${String((draft as Record<string, JsonValue>).slug || active.key)}` : "/"} target="_blank">Xem trang ↗</a><button className="admin-primary" disabled={saving || !active} onClick={save}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button></div></header>
       {message && <div className="admin-notice">{message}</div>}
-      {!active ? <div className="admin-empty"><h2>Chưa kết nối dữ liệu</h2><p>Chạy file <code>supabase/schema.sql</code> trong Supabase SQL Editor, sau đó tải lại trang.</p></div> : <div className="admin-editor"><FieldEditor name={active.label} value={draft} path={[]} onChange={update} onUpload={upload} uploading={uploading} /></div>}
+      {!active ? <div className="admin-empty"><h2>Chưa kết nối dữ liệu</h2><p>Chạy file <code>supabase/schema.sql</code> trong Supabase SQL Editor, sau đó tải lại trang.</p></div> : <div className="admin-editor"><FieldEditor name={active.label} value={draft} path={[]} onChange={update} onUpload={upload} uploading={uploading} galleryLinks={galleryLinks} /></div>}
     </section>
   </main>;
 }
