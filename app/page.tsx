@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getBrowserSupabase } from "../lib/supabase";
-import { ContactCta, SiteFooter } from "./components/SiteChrome";
+import { ContactCta, SiteFooter, useGalleryMenu } from "./components/SiteChrome";
 
 const nav = [
   ["Home", "/"],
@@ -54,6 +54,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [content, setContent] = useState<typeof homeFallback | null>(null);
+  const galleryItems = useGalleryMenu();
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 24);
@@ -100,7 +101,7 @@ export default function Home() {
                 <a className="gallery-desktop-link" href={href}>Portfolio <span aria-hidden="true">+</span></a>
                 <div className="gallery-mobile-row"><a href={href} onClick={() => setMenuOpen(false)}>Portfolio</a><button className="gallery-mobile-toggle" type="button" aria-label="Toggle portfolio galleries" aria-expanded={galleryOpen} onClick={() => setGalleryOpen(!galleryOpen)}><span aria-hidden="true">+</span></button></div>
                 <div className={`nav-submenu${galleryOpen ? " mobile-open" : ""}`}>
-                  {[1,2,3,4].map(number => <a key={number} href={`/gallery-${number}`} onClick={() => setMenuOpen(false)}>Gallery {number}</a>)}
+                  {galleryItems.map(item => <a key={item.key} href={`/${item.slug}`} onClick={() => setMenuOpen(false)}>{item.title}</a>)}
                 </div>
               </div>
             ) : <a key={href} href={href} onClick={() => setMenuOpen(false)}>{item}</a>)}

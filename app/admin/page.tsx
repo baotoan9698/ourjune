@@ -9,6 +9,10 @@ type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string
 type ContentRow = { key: string; page: string; label: string; value: JsonValue; sort_order: number };
 
 const imageKey = /(image|images|hero|photo|portrait|background)/i;
+const fieldLabels: Record<string, string> = {
+  menuTitle: "Tên hiển thị trên menu Portfolio",
+  slug: "Slug đường dẫn (ví dụ: wedding-stories)",
+};
 
 function prepareContentValue(key: string, value: JsonValue): JsonValue {
   const copy = structuredClone(value);
@@ -16,6 +20,8 @@ function prepareContentValue(key: string, value: JsonValue): JsonValue {
   const prepared = copy as Record<string, JsonValue>;
   if (key === "home" && typeof prepared.contactImage !== "string") prepared.contactImage = "/hero-alt.jpg";
   if (key.startsWith("gallery-")) {
+    if (typeof prepared.menuTitle !== "string") prepared.menuTitle = typeof prepared.title === "string" ? prepared.title : key;
+    if (typeof prepared.slug !== "string") prepared.slug = key;
     const current = Array.isArray(prepared.images) ? prepared.images : [];
     const source = current.length ? current : [typeof prepared.hero === "string" ? prepared.hero : ""];
     prepared.images = Array.from({ length: 16 }, (_, index) => structuredClone(source[index % source.length]));
@@ -75,7 +81,7 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
   const isImage = imageKey.test(name) || path.some(part => imageKey.test(String(part)));
   const isGalleryImage = path.some(part => String(part) === "images");
   const text = String(value ?? "");
-  return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{name}</span>
+  return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{fieldLabels[name] || name}</span>
     {text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
     {isImage && <div className="admin-media-row">
       {text && <img src={text} alt="Xem trước" />}
@@ -143,12 +149,26 @@ export default function AdminPage() {
     const supabase = getBrowserSupabase();
     if (!supabase || !active) return;
     setSaving(true); setMessage("");
-    const { error } = await supabase.from("site_content").update({ value: draft, updated_at: new Date().toISOString() }).eq("key", active.key);
+    let valueToSave = draft;
+    if (active.key.startsWith("gallery-") && draft && !Array.isArray(draft) && typeof draft === "object") {
+      const gallery = { ...(draft as Record<string, JsonValue>) };
+      const slug = String(gallery.slug ?? "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "").replace(/-{2,}/g, "-");
+      if (!slug) { setSaving(false); return setMessage("Slug không hợp lệ. Hãy nhập chữ, số hoặc dấu gạch ngang."); }
+      const reservedSlugs = new Set(["about", "admin", "contact", "gallery", "portfolio", "service", "testimonials"]);
+      if (reservedSlugs.has(slug)) { setSaving(false); return setMessage("Slug này trùng với một trang chính. Hãy chọn tên khác."); }
+      const duplicate = rows.some(row => row.key !== active.key && row.key.startsWith("gallery-") && String((row.value as Record<string, JsonValue>)?.slug ?? row.key) === slug);
+      if (duplicate) { setSaving(false); return setMessage("Slug này đang được một gallery khác sử dụng."); }
+      gallery.slug = slug;
+      gallery.menuTitle = String(gallery.menuTitle ?? gallery.title ?? active.label).trim();
+      valueToSave = gallery;
+      setDraft(gallery);
+    }
+    const { error } = await supabase.from("site_content").update({ value: valueToSave, updated_at: new Date().toISOString() }).eq("key", active.key);
     setSaving(false);
     if (error) return setMessage(error.code === "42501"
       ? "Tài khoản này chưa có quyền admin. Hãy thêm tài khoản vào bảng admin_users và kiểm tra policy RLS."
       : `Không lưu được: ${error.message}`);
-    setRows(current => current.map(row => row.key === active.key ? { ...row, value: structuredClone(draft) } : row));
+    setRows(current => current.map(row => row.key === active.key ? { ...row, value: structuredClone(valueToSave) } : row));
     setMessage("Đã lưu và xuất bản thành công.");
   }
 
@@ -162,7 +182,7 @@ export default function AdminPage() {
       <button className="admin-signout" onClick={signOut}>Đăng xuất</button>
     </aside>
     <section className="admin-workspace">
-      <header><div><span className="admin-kicker">{active?.page ?? "SETUP"}</span><h1>{active?.label ?? "Chưa có dữ liệu"}</h1></div><div className="admin-actions"><a href={active?.key.startsWith("gallery-") ? `/${active.key}` : "/"} target="_blank">Xem trang ↗</a><button className="admin-primary" disabled={saving || !active} onClick={save}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button></div></header>
+      <header><div><span className="admin-kicker">{active?.page ?? "SETUP"}</span><h1>{active?.label ?? "Chưa có dữ liệu"}</h1></div><div className="admin-actions"><a href={active?.key.startsWith("gallery-") && draft && !Array.isArray(draft) && typeof draft === "object" ? `/${String((draft as Record<string, JsonValue>).slug || active.key)}` : "/"} target="_blank">Xem trang ↗</a><button className="admin-primary" disabled={saving || !active} onClick={save}>{saving ? "Đang lưu…" : "Lưu thay đổi"}</button></div></header>
       {message && <div className="admin-notice">{message}</div>}
       {!active ? <div className="admin-empty"><h2>Chưa kết nối dữ liệu</h2><p>Chạy file <code>supabase/schema.sql</code> trong Supabase SQL Editor, sau đó tải lại trang.</p></div> : <div className="admin-editor"><FieldEditor name={active.label} value={draft} path={[]} onChange={update} onUpload={upload} uploading={uploading} /></div>}
     </section>

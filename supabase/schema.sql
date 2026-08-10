@@ -90,6 +90,14 @@ update public.site_content
 set value = jsonb_set(value, '{contactImage}', '"/hero-alt.jpg"'::jsonb, true)
 where key = 'home' and not (value ? 'contactImage');
 
+-- Gallery menu names and editable public slugs.
+update public.site_content
+set value = jsonb_set(
+  jsonb_set(value, '{menuTitle}', to_jsonb(coalesce(value->>'title', label)), true),
+  '{slug}', to_jsonb(key), true
+)
+where page = 'Gallery' and (not (value ? 'menuTitle') or not (value ? 'slug'));
+
 -- After creating your Auth user, replace the email below and run this statement:
 -- insert into public.admin_users(user_id)
 -- select id from auth.users where email = 'YOUR-ADMIN-EMAIL' on conflict do nothing;

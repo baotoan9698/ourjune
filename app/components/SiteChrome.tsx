@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getBrowserSupabase } from "../../lib/supabase";
+import { normalizeGallerySlug, type GalleryMenuItem } from "../../lib/content";
 
 const links = [
   ["Home", "/"],
@@ -12,10 +13,30 @@ const links = [
   ["Contact", "/contact"],
 ];
 
+const galleryMenuFallback: GalleryMenuItem[] = [1, 2, 3, 4].map(number => ({ key: `gallery-${number}`, title: `Gallery ${number}`, slug: `gallery-${number}` }));
+
+export function useGalleryMenu() {
+  const [items, setItems] = useState(galleryMenuFallback);
+  useEffect(() => {
+    let active = true;
+    getBrowserSupabase()?.from("site_content").select("key,value,sort_order").eq("page", "Gallery").order("sort_order").then(({ data }) => {
+      if (!active || !data?.length) return;
+      setItems(data.map(row => ({
+        key: row.key,
+        title: String(row.value?.menuTitle || row.value?.title || row.key),
+        slug: normalizeGallerySlug(String(row.value?.slug || row.key), row.key),
+      })));
+    });
+    return () => { active = false; };
+  }, []);
+  return items;
+}
+
 export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
   const [open, setOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const galleryItems = useGalleryMenu();
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24);
@@ -36,7 +57,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             <a className="gallery-desktop-link" href={href}>Portfolio <span aria-hidden="true">+</span></a>
             <div className="gallery-mobile-row"><a href={href} onClick={() => setOpen(false)}>Portfolio</a><button className="gallery-mobile-toggle" type="button" aria-label="Toggle portfolio galleries" aria-expanded={galleryOpen} onClick={() => setGalleryOpen(!galleryOpen)}><span aria-hidden="true">+</span></button></div>
             <div className={`nav-submenu${galleryOpen ? " mobile-open" : ""}`}>
-              {[1,2,3,4].map(number => <a key={number} href={`/gallery-${number}`} onClick={() => setOpen(false)}>Gallery {number}</a>)}
+              {galleryItems.map(item => <a key={item.key} href={`/${item.slug}`} onClick={() => setOpen(false)}>{item.title}</a>)}
             </div>
           </div>
         ) : <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>)}
