@@ -9,5 +9,5 @@ export const dynamic = "force-dynamic";
 export default async function PortfolioPage(){const c=await getSiteContent("portfolio",fallback);return <main className="subpage portfolio-page" id="top">
   <SiteHeader transparent/><section className="portfolio-hero"><div className="portfolio-hero-copy"><h1>{c.title}</h1><p>{c.description}</p></div></section>
   <section className="portfolio-collections">{c.collections.map((item,index)=><a className={`portfolio-project project-${index+1}`} href={item.href} key={item.href}><span>View Gallery</span><img src={item.image} alt={item.title}/><h2>{item.title}</h2></a>)}</section>
-  <ContactCta image/><SiteFooter/>
+  <ContactCta/><SiteFooter/>
  </main>}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getBrowserSupabase } from "../lib/supabase";
+import { ContactCta, SiteFooter } from "./components/SiteChrome";
 
 const nav = [
   ["Home", "/"],
@@ -43,7 +44,7 @@ const homeFallback = {
   quote: "Mystery is not about traveling to new places but about looking with new eyes.", quoteAuthor: "MARCEL PROUST",
   worksLabel: "02 — SELECTED STORIES", worksTitle: "Our Works", worksDescription: "A collection of honest moments, quiet gestures, and stories that deserve to live beyond the day they happened.",
   works: [{title:"Portraits",image:"/portrait-4.jpg",href:"/gallery-2"},{title:"Love Stories",image:"/horizontal-1.jpg",href:"/gallery-1"},{title:"Weddings",image:"/vertical-2.jpg",href:"/gallery-3"}],
-  contactTitle: "Get in touch", contactText: "Send us a message, and we'll set up a free discovery call to start planning your dream elopement.", contactEmail: "hello@ourjune.photo",
+  contactTitle: "Get in touch", contactText: "Send us a message, and we'll set up a free discovery call to start planning your dream elopement.", contactEmail: "hello@ourjune.photo", contactImage: "/hero-alt.jpg",
   footerImages: ["/portrait-1.jpg","/portrait-4.jpg","/horizontal-3.jpg","/hero.jpg"], instagramHandle: "@OURJUNE", copyright: "© 2026 OUR JUNE",
 };
 
@@ -80,7 +81,7 @@ export default function Home() {
   const testimonial = activeTestimonials[testimonialIndex % activeTestimonials.length];
 
   return (
-    <main className="home-content">
+    <main className="home-content" id="top">
       <section className="hero" id="home" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.5)),url("${content.heroImage}")`}}>
         <header className={`site-header${scrolled ? " scrolled" : ""}`}>
           <a className="logo" href="#home">OUR JUNE</a>
@@ -174,34 +175,9 @@ export default function Home() {
         <a className="outline-button" href="/Portfolio">See Portfolio <span>↗</span></a>
       </section>
 
-      <section className="contact" id="contact">
-        <div className="contact-content">
-          <h2>{content.contactTitle}</h2>
-          <p>{content.contactText}</p>
-          <a className="light-button" href={`mailto:${content.contactEmail}`}>Let&apos;s Connect</a>
-        </div>
-      </section>
+      <ContactCta content={content} />
 
-      <footer className="site-footer">
-        <div className="footer-gallery" aria-label="Selected Instagram photographs">
-          {content.footerImages.map((image,index)=><img src={image} alt={`Our June story ${index+1}`} key={`${image}-${index}`}/>)}
-        </div>
-        <div className="footer-social">
-          <span>FOLLOW US ON INSTAGRAM</span>
-          <a className="instagram-handle" href="https://www.instagram.com/">{content.instagramHandle}</a>
-          <div className="social-links">
-            <a className="facebook-icon" href="https://www.facebook.com/" aria-label="Facebook">f</a>
-            <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram">
-              <span />
-            </a>
-            <a className="whatsapp-icon" href="https://wa.me/84555583655" aria-label="WhatsApp" target="_blank" rel="noreferrer"><img src="/whatsapp-icon.png" alt="" /></a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>{content.copyright}</p>
-          <a href="#home" aria-label="Back to top">↑</a>
-        </div>
-      </footer>
+      <SiteFooter content={content} />
     </main>
   );
 }

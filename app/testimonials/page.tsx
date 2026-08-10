@@ -14,5 +14,5 @@ export const dynamic = "force-dynamic";
 export default async function TestimonialsPage(){const c=await getSiteContent("testimonials",fallback);return <main className="subpage" id="top"><SiteHeader/><div className="subpage-main">
   <section className="page-intro"><span className="page-label">{c.label}</span><h1 className="page-title">{c.title.split("\n").map(line=><span key={line}>{line}<br/></span>)}</h1></section>
   <section className="testimonials-grid">{c.reviews.map(review=><article className="testimonial-item" key={review.name}><img src={review.image} alt={`${review.name} testimonial`}/><p>{review.quote}</p><h2>{review.name}</h2></article>)}</section>
-  <ContactCta image/><SiteFooter/>
+  <ContactCta/><SiteFooter/>
  </div></main>}

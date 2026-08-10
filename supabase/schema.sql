@@ -86,6 +86,10 @@ insert into public.site_content (key, page, label, sort_order, value) values
 ('contact','Pages','Contact',50,$json${"title":"Send us a\nmessage","email":"HELLO@OURJUNE.PHOTO","phone":"+84 555 583 655","image":"/portrait-1.jpg","nameLabel":"Name *","emailLabel":"Email address *","messageLabel":"Message *","buttonLabel":"Send message"}$json$::jsonb)
 on conflict (key) do nothing;
 
+update public.site_content
+set value = jsonb_set(value, '{contactImage}', '"/hero-alt.jpg"'::jsonb, true)
+where key = 'home' and not (value ? 'contactImage');
+
 -- After creating your Auth user, replace the email below and run this statement:
 -- insert into public.admin_users(user_id)
 -- select id from auth.users where email = 'YOUR-ADMIN-EMAIL' on conflict do nothing;

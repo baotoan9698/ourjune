@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getBrowserSupabase } from "../../lib/supabase";
 
 const links = [
   ["Home", "/"],
@@ -44,35 +45,82 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
   );
 }
 
-export function ContactCta({ image = false }: { image?: boolean }) {
+type SharedChromeContent = {
+  contactTitle: string;
+  contactText: string;
+  contactImage: string;
+  footerImages: string[];
+  instagramHandle: string;
+  copyright: string;
+};
+
+const sharedFallback: SharedChromeContent = {
+  contactTitle: "Get in touch",
+  contactText: "Send us a message, and we’ll set up a free discovery call to start planning your dream photoshoot.",
+  contactImage: "/hero-alt.jpg",
+  footerImages: ["/portrait-1.jpg", "/portrait-4.jpg", "/horizontal-3.jpg", "/hero.jpg"],
+  instagramHandle: "@OURJUNE",
+  copyright: "© 2026 OUR JUNE",
+};
+
+function normalizeSharedContent(value?: Partial<SharedChromeContent>): SharedChromeContent {
+  const sourceImages = value?.footerImages?.length ? value.footerImages : sharedFallback.footerImages;
+  return {
+    contactTitle: value?.contactTitle || sharedFallback.contactTitle,
+    contactText: value?.contactText || sharedFallback.contactText,
+    contactImage: value?.contactImage || sharedFallback.contactImage,
+    footerImages: Array.from({ length: 4 }, (_, index) => sourceImages[index % sourceImages.length]),
+    instagramHandle: value?.instagramHandle || sharedFallback.instagramHandle,
+    copyright: value?.copyright || sharedFallback.copyright,
+  };
+}
+
+function useSharedChromeContent(provided?: Partial<SharedChromeContent>) {
+  const [content, setContent] = useState(() => normalizeSharedContent(provided));
+
+  useEffect(() => {
+    if (provided) {
+      setContent(normalizeSharedContent(provided));
+      return;
+    }
+    let active = true;
+    getBrowserSupabase()?.from("site_content").select("value").eq("key", "home").maybeSingle().then(({ data }) => {
+      if (active && data?.value) setContent(normalizeSharedContent(data.value as Partial<SharedChromeContent>));
+    });
+    return () => { active = false; };
+  }, [provided]);
+
+  return content;
+}
+
+export function ContactCta({ content: provided }: { content?: Partial<SharedChromeContent> }) {
+  const content = useSharedChromeContent(provided);
   return (
-    <section className={`inner-contact${image ? " image-contact" : ""}`}>
-      <h2>Get in touch</h2>
-      <p>Send us a message, and we’ll set up a free discovery call to start planning your dream photoshoot.</p>
+    <section className="inner-contact image-contact" style={{ backgroundImage: `linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.58)),url("${content.contactImage}")` }}>
+      <h2>{content.contactTitle}</h2>
+      <p>{content.contactText}</p>
       <a href="/contact">Let’s Connect</a>
     </section>
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ content: provided }: { content?: Partial<SharedChromeContent> }) {
+  const content = useSharedChromeContent(provided);
   return (
     <footer className="site-footer inner-footer">
       <div className="footer-gallery" aria-label="Selected Instagram photographs">
-        <img src="/portrait-1.jpg" alt="Our June wedding story" />
-        <img src="/portrait-4.jpg" alt="Our June couple portrait" />
-        <img src="/horizontal-3.jpg" alt="Our June beach ceremony" />
-        <img src="/hero.jpg" alt="Our June cinematic wedding" />
+        {content.footerImages.map((image, index) => <img src={image} alt={`Our June story ${index + 1}`} key={`${image}-${index}`} />)}
       </div>
       <div className="footer-social">
         <span>FOLLOW US ON INSTAGRAM</span>
-        <a className="instagram-handle" href="https://www.instagram.com/">@OURJUNE</a>
+        <a className="instagram-handle" href="https://www.instagram.com/">{content.instagramHandle}</a>
         <div className="social-links">
           <a className="facebook-icon" href="https://www.facebook.com/" aria-label="Facebook">f</a>
           <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram"><span /></a>
           <a className="whatsapp-icon" href="https://wa.me/84555583655" aria-label="WhatsApp" target="_blank" rel="noreferrer"><img src="/whatsapp-icon.png" alt="" /></a>
         </div>
       </div>
-      <div className="footer-bottom"><p>© 2026 OUR JUNE</p><a href="#top" aria-label="Back to top">↑</a></div>
+      <div className="footer-bottom"><p>{content.copyright}</p><a href="#top" aria-label="Back to top">↑</a></div>
     </footer>
   );
 }

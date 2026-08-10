@@ -10,14 +10,17 @@ type ContentRow = { key: string; page: string; label: string; value: JsonValue; 
 
 const imageKey = /(image|images|hero|photo|portrait|background)/i;
 
-function withGallerySlots(key: string, value: JsonValue): JsonValue {
+function prepareContentValue(key: string, value: JsonValue): JsonValue {
   const copy = structuredClone(value);
-  if (!key.startsWith("gallery-") || !copy || Array.isArray(copy) || typeof copy !== "object") return copy;
-  const gallery = copy as Record<string, JsonValue>;
-  const current = Array.isArray(gallery.images) ? gallery.images : [];
-  const source = current.length ? current : [typeof gallery.hero === "string" ? gallery.hero : ""];
-  gallery.images = Array.from({ length: 16 }, (_, index) => structuredClone(source[index % source.length]));
-  return gallery;
+  if (!copy || Array.isArray(copy) || typeof copy !== "object") return copy;
+  const prepared = copy as Record<string, JsonValue>;
+  if (key === "home" && typeof prepared.contactImage !== "string") prepared.contactImage = "/hero-alt.jpg";
+  if (key.startsWith("gallery-")) {
+    const current = Array.isArray(prepared.images) ? prepared.images : [];
+    const source = current.length ? current : [typeof prepared.hero === "string" ? prepared.hero : ""];
+    prepared.images = Array.from({ length: 16 }, (_, index) => structuredClone(source[index % source.length]));
+  }
+  return prepared;
 }
 
 function setAtPath(source: JsonValue, path: (string | number)[], next: JsonValue): JsonValue {
@@ -103,7 +106,7 @@ export default function AdminPage() {
     setRows(content);
     if (content.length) {
       setSelected(current => current || content[0].key);
-      setDraft(current => Object.keys(current as object).length ? current : withGallerySlots(content[0].key, content[0].value));
+      setDraft(current => Object.keys(current as object).length ? current : prepareContentValue(content[0].key, content[0].value));
     }
     setLoading(false);
   }, [router]);
@@ -114,7 +117,7 @@ export default function AdminPage() {
   function choose(key: string) {
     const row = rows.find(item => item.key === key);
     if (!row) return;
-    setSelected(key); setDraft(withGallerySlots(row.key, row.value)); setMessage("");
+    setSelected(key); setDraft(prepareContentValue(row.key, row.value)); setMessage("");
   }
 
   function update(path: (string | number)[], value: JsonValue) { setDraft(current => setAtPath(current, path, value)); }
