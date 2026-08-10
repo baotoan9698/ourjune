@@ -159,8 +159,9 @@ h2 { font-weight:400; letter-spacing:-4px; }
   .nav-dropdown .nav-submenu.mobile-open { display:grid; margin-top:18px; opacity:1; visibility:visible; }
   .nav-submenu::before { display:none; }
   .nav-submenu a { font-size:13px; color:#999; }
-  .hero-copy h1 { margin:0 22px; padding-top:145px; font-size:48px; line-height:53px; letter-spacing:-2px; }
-  .hero-copy p { width:auto; left:25%; right:24px; bottom:10%; font-size:14px; line-height:25px; }
+  .hero-copy h1 { margin:0 16px; padding-top:98px; max-width:340px; font-size:32px; line-height:37px; letter-spacing:-1.5px; }
+  .hero-copy p { width:auto; left:16px; right:16px; bottom:22px; font-size:14px; line-height:25px; }
+  .scroll-cue { display:none; }
   .section-pad { padding:90px 24px; }
   .about-grid { grid-template-columns:1fr; gap:80px; }
   .image-stack { min-height:520px; }
