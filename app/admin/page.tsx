@@ -7,7 +7,7 @@ import "./admin.css";
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 type ContentRow = { key: string; page: string; label: string; value: JsonValue; sort_order: number };
-type GalleryLinkOption = { label: string; value: string };
+type GalleryLinkOption = { label: string; value: string; legacy: string };
 
 function isImageField(name: string) {
   return /images?$/i.test(name) || /(^|_)(photo|portrait|background)$/i.test(name) || name.toLowerCase() === "hero";
@@ -92,10 +92,11 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
 
   const isImage = isImageField(name) || path.some(part => isImageField(String(part)));
   const isGalleryImage = path.some(part => String(part) === "images");
-  const isWorkGalleryLink = name === "href" && path.some(part => String(part) === "works");
+  const isGalleryLink = name === "href" && path.some(part => ["works", "collections"].includes(String(part)));
   const text = String(value ?? "");
+  const selectedGalleryLink = galleryLinks.find(option => option.value === text || option.legacy === text)?.value ?? text;
   return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{fieldLabels[name] || name}</span>
-    {isWorkGalleryLink ? <select value={text} onChange={e => onChange(path, e.target.value)}>{galleryLinks.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select> : text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
+    {isGalleryLink ? <select value={selectedGalleryLink} onChange={e => onChange(path, e.target.value)}>{galleryLinks.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select> : text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
     {isImage && <div className="admin-media-row">
       {text && <img src={text} alt="Xem trước" />}
       <label className="admin-upload">{uploading === pathId ? "Đang tải…" : "Tải hình mới"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={Boolean(uploading)} onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(path, file); event.target.value = ""; }} /></label>
@@ -134,7 +135,7 @@ export default function AdminPage() {
   const active = useMemo(() => rows.find(row => row.key === selected), [rows, selected]);
   const galleryLinks = useMemo<GalleryLinkOption[]>(() => rows.filter(row => row.key.startsWith("gallery-")).sort((a, b) => a.sort_order - b.sort_order).map(row => {
     const value = row.value && !Array.isArray(row.value) && typeof row.value === "object" ? row.value as Record<string, JsonValue> : {};
-    return { label: String(value.menuTitle || value.title || row.label), value: `/${String(value.slug || row.key)}` };
+    return { label: String(value.menuTitle || value.title || row.label), value: `/${String(value.slug || row.key)}`, legacy: `/${row.key}` };
   }), [rows]);
 
   function choose(key: string) {
@@ -167,6 +168,20 @@ export default function AdminPage() {
     if (!supabase || !active) return;
     setSaving(true); setMessage("");
     let valueToSave = draft;
+    if (["home", "portfolio"].includes(active.key) && draft && !Array.isArray(draft) && typeof draft === "object") {
+      const page = structuredClone(draft as Record<string, JsonValue>);
+      const listKey = active.key === "home" ? "works" : "collections";
+      const items = Array.isArray(page[listKey]) ? page[listKey] as JsonValue[] : [];
+      page[listKey] = items.map(item => {
+        if (!item || Array.isArray(item) || typeof item !== "object") return item;
+        const next = { ...(item as Record<string, JsonValue>) };
+        const match = galleryLinks.find(option => option.legacy === String(next.href ?? ""));
+        if (match) next.href = match.value;
+        return next;
+      });
+      valueToSave = page;
+      setDraft(page);
+    }
     if (active.key.startsWith("gallery-") && draft && !Array.isArray(draft) && typeof draft === "object") {
       const gallery = { ...(draft as Record<string, JsonValue>) };
       const slug = String(gallery.slug ?? "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "").replace(/-{2,}/g, "-");
