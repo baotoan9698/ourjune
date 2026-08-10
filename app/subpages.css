@@ -41,6 +41,7 @@
 .about-services img { height:560px; object-fit:cover; }
 .about-services div { padding:55px 12%; }
 .about-services h3 { margin:135px 0 0; font:500 30px/1.55 "Archivo",sans-serif; }
+.about-services h3 strong { font-weight:700; }
 .about-page .about-services + .inner-contact { margin-top:90px; }
 
 /* Contact */
@@ -83,6 +84,7 @@
 .package-card h2 { margin:0 0 34px; font:500 28px/39px "Archivo",sans-serif; letter-spacing:0; word-spacing:2px; }
 .package-card p { margin:0; white-space:pre-line; font:300 14px/25px "Roboto Mono",monospace; }
 .package-card p span { display:block; }
+.package-card p strong { font-weight:700; }
 .package-card .package-price { margin-top:12px; font-weight:700; }
 .package-card img { display:block; width:100%; margin-top:38px; object-fit:cover; object-position:center; }
 .package-card-1 img,.package-card-3 img { aspect-ratio:2/3; }

@@ -21,6 +21,10 @@ const fallback = {
 };
 
 export const dynamic = "force-dynamic";
+function ServicesText({ text }: { text: string }) {
+  return <>{text.split("\n").map((line, lineIndex) => <span key={lineIndex}>{line.split(/(\*\*.*?\*\*)/g).filter(Boolean).map((part, partIndex) => part.startsWith("**") && part.endsWith("**") ? <strong key={partIndex}>{part.slice(2, -2)}</strong> : part)}<br/></span>)}</>;
+}
+
 export default async function AboutPage() {
   const c = await getSiteContent("about", fallback);
   const reviews = c.clientReviews?.length ? c.clientReviews : [
@@ -43,7 +47,7 @@ export default async function AboutPage() {
       </div>
     </section>
     <ClientSaySlider label={c.clientLabel} reviews={reviews}/>
-    <section className="about-services"><img src={c.servicesImage} alt="Our June services"/><div><span className="page-label">{c.servicesLabel}</span><h3>{c.services.split("\n").map(line=><span key={line}>{line}<br/></span>)}</h3></div></section>
+    <section className="about-services"><img src={c.servicesImage} alt="Our June services"/><div><span className="page-label">{c.servicesLabel}</span><h3><ServicesText text={c.services}/></h3></div></section>
     <ContactCta/><SiteFooter/>
   </div></main>;
 }

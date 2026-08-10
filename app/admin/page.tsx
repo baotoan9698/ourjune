@@ -93,10 +93,14 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
   const isImage = isImageField(name) || path.some(part => isImageField(String(part)));
   const isGalleryImage = path.some(part => String(part) === "images");
   const isGalleryLink = name === "href" && path.some(part => ["works", "collections"].includes(String(part)));
+  const isPackageText = name === "text" && path.some(part => String(part) === "packages");
+  const isAboutServices = name === "services";
+  const isRichText = isPackageText || isAboutServices;
   const text = String(value ?? "");
   const selectedGalleryLink = galleryLinks.find(option => option.value === text || option.legacy === text)?.value ?? text;
-  return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{fieldLabels[name] || name}</span>
-    {isGalleryLink ? <select value={selectedGalleryLink} onChange={e => onChange(path, e.target.value)}>{galleryLinks.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select> : text.length > 90 ? <textarea rows={4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
+  const displayName = isRichText ? "Nội dung — xuống dòng bằng Enter, in đậm bằng **chữ**" : fieldLabels[name] || name;
+  return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{displayName}</span>
+    {isGalleryLink ? <select value={selectedGalleryLink} onChange={e => onChange(path, e.target.value)}>{galleryLinks.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select> : isRichText || text.length > 90 ? <textarea rows={isRichText ? 8 : 4} value={text} onChange={e => onChange(path, e.target.value)} /> : <input value={text} onChange={e => onChange(path, typeof value === "number" ? Number(e.target.value) : e.target.value)} />}
     {isImage && <div className="admin-media-row">
       {text && <img src={text} alt="Xem trước" />}
       <label className="admin-upload">{uploading === pathId ? "Đang tải…" : "Tải hình mới"}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={Boolean(uploading)} onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(path, file); event.target.value = ""; }} /></label>

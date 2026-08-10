@@ -17,9 +17,14 @@ const fallback = {
 };
 
 export const dynamic = "force-dynamic";
+function PackageText({ text, title }: { text: string; title: string }) {
+  const lines = text.split("\n");
+  return <>{lines.map((line, lineIndex) => <span className={lineIndex === lines.length - 1 ? "package-price" : undefined} key={`${title}-${lineIndex}`}>{line.split(/(\*\*.*?\*\*)/g).filter(Boolean).map((part, partIndex) => part.startsWith("**") && part.endsWith("**") ? <strong key={partIndex}>{part.slice(2, -2)}</strong> : part)}</span>)}</>;
+}
+
 export default async function ServicePage(){const saved=await getSiteContent("service",fallback);const mistakenImage=/^https?:\/\//i.test(saved.heroTitle) ? saved.heroTitle : "";const c={...saved,heroTitle:mistakenImage?fallback.heroTitle:saved.heroTitle,heroImage:saved.heroImage||mistakenImage||fallback.heroImage};return <main className="subpage" id="top"><SiteHeader transparent/><div>
   <section className="service-hero" style={{backgroundImage:`linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.64)),url("${c.heroImage}")`}}><div className="service-hero-copy"><h1>{c.heroTitle}</h1><p>{c.heroText}</p></div></section>
-  <section className="packages">{c.packages.map((p,index)=><article className={`package-card package-card-${index + 1}`} key={p.title}><div className="package-copy"><h2>{p.title}</h2><p>{p.text.split("\n").map((line,lineIndex,lines)=><span className={lineIndex===lines.length-1?"package-price":undefined} key={`${p.title}-${lineIndex}`}>{line}</span>)}</p></div><img src={p.image} alt={p.title}/></article>)}</section>
+  <section className="packages">{c.packages.map((p,index)=><article className={`package-card package-card-${index + 1}`} key={p.title}><div className="package-copy"><h2>{p.title}</h2><p><PackageText text={p.text} title={p.title}/></p></div><img src={p.image} alt={p.title}/></article>)}</section>
   <section className="approach"><img src={c.approachImage} alt="Our approach"/><div><span className="page-label">{c.approachLabel}</span><h2>{c.approachTitle.split("\n").map(line=><span key={line}>{line}<br/></span>)}</h2><p>{c.approachText}</p></div></section>
   <section className="faq"><span className="page-label">{c.faqLabel}</span>{c.faqs.map(item=><div className="faq-row" key={item.question}><h3>{item.question}</h3><p>{item.answer}</p></div>)}</section>
   <ContactCta/><SiteFooter/>
