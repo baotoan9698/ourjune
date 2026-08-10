@@ -8,7 +8,9 @@ import "./admin.css";
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 type ContentRow = { key: string; page: string; label: string; value: JsonValue; sort_order: number };
 
-const imageKey = /(image|images|hero|photo|portrait|background)/i;
+function isImageField(name: string) {
+  return /images?$/i.test(name) || /(^|_)(photo|portrait|background)$/i.test(name) || name.toLowerCase() === "hero";
+}
 const fieldLabels: Record<string, string> = {
   menuTitle: "Tên hiển thị trên menu Portfolio",
   slug: "Slug đường dẫn (ví dụ: wedding-stories)",
@@ -19,6 +21,14 @@ function prepareContentValue(key: string, value: JsonValue): JsonValue {
   if (!copy || Array.isArray(copy) || typeof copy !== "object") return copy;
   const prepared = copy as Record<string, JsonValue>;
   if (key === "home" && typeof prepared.contactImage !== "string") prepared.contactImage = "/hero-alt.jpg";
+  if (key === "service") {
+    const currentTitle = typeof prepared.heroTitle === "string" ? prepared.heroTitle : "";
+    if (/^https?:\/\//i.test(currentTitle)) {
+      if (typeof prepared.heroImage !== "string") prepared.heroImage = currentTitle;
+      prepared.heroTitle = "More details about our services";
+    }
+    if (typeof prepared.heroImage !== "string") prepared.heroImage = "/horizontal-1.jpg";
+  }
   if (key.startsWith("gallery-")) {
     if (typeof prepared.menuTitle !== "string") prepared.menuTitle = typeof prepared.title === "string" ? prepared.title : key;
     if (typeof prepared.slug !== "string") prepared.slug = key;
@@ -78,7 +88,7 @@ function FieldEditor({ name, value, path, onChange, onRemove, onUpload, uploadin
 
   if (typeof value === "boolean") return <label className="admin-check"><input type="checkbox" checked={value} onChange={e => onChange(path, e.target.checked)} />{name}</label>;
 
-  const isImage = imageKey.test(name) || path.some(part => imageKey.test(String(part)));
+  const isImage = isImageField(name) || path.some(part => isImageField(String(part)));
   const isGalleryImage = path.some(part => String(part) === "images");
   const text = String(value ?? "");
   return <label className={`admin-field${isGalleryImage ? " admin-gallery-image" : ""}`}><span>{fieldLabels[name] || name}</span>

@@ -48,7 +48,7 @@ img { display:block; width:100%; object-fit:cover; }
 .gallery-mobile-toggle { display:none; border:0; padding:0; background:transparent; color:white; font:400 14px/17px "Roboto Mono",monospace; letter-spacing:1.3px; text-transform:uppercase; }
 .gallery-mobile-row { display:none!important; }
 .gallery-desktop-link { display:flex!important; white-space:nowrap; }
-.nav-submenu { position:absolute; top:calc(100% + 18px); left:-20px; width:145px; padding:16px 20px; display:grid; gap:14px; background:#090909; border:1px solid rgba(255,255,255,.1); opacity:0; visibility:hidden; transform:translateY(-7px); transition:opacity .2s ease,transform .2s ease,visibility .2s; }
+.nav-submenu { position:absolute; top:calc(100% + 18px); left:-20px; width:max-content; min-width:210px; max-width:min(320px,calc(100vw - 32px)); box-sizing:border-box; padding:16px 20px; display:grid; gap:14px; background:#090909; border:1px solid rgba(255,255,255,.1); opacity:0; visibility:hidden; transform:translateY(-7px); transition:opacity .2s ease,transform .2s ease,visibility .2s; }
 .nav-submenu::before { content:""; position:absolute; left:0; right:0; top:-19px; height:20px; }
 .nav-submenu a { font-size:11px; line-height:14px; white-space:nowrap; color:#aaa; transition:color .2s; }
 .nav-submenu a:hover,.nav-submenu a:focus-visible { color:white; }

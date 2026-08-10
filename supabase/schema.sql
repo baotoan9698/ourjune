@@ -90,6 +90,10 @@ update public.site_content
 set value = jsonb_set(value, '{contactImage}', '"/hero-alt.jpg"'::jsonb, true)
 where key = 'home' and not (value ? 'contactImage');
 
+update public.site_content
+set value = jsonb_set(value, '{heroImage}', '"/horizontal-1.jpg"'::jsonb, true)
+where key = 'service' and not (value ? 'heroImage');
+
 -- Gallery menu names and editable public slugs.
 update public.site_content
 set value = jsonb_set(
