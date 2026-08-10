@@ -73,6 +73,9 @@ type SharedChromeContent = {
   footerImages: string[];
   instagramHandle: string;
   copyright: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  whatsappUrl: string;
 };
 
 const sharedFallback: SharedChromeContent = {
@@ -82,6 +85,9 @@ const sharedFallback: SharedChromeContent = {
   footerImages: ["/portrait-1.jpg", "/portrait-4.jpg", "/horizontal-3.jpg", "/hero.jpg"],
   instagramHandle: "@OURJUNE",
   copyright: "© 2026 OUR JUNE",
+  facebookUrl: "https://www.facebook.com/",
+  instagramUrl: "https://www.instagram.com/",
+  whatsappUrl: "https://wa.me/84555583655",
 };
 
 function normalizeSharedContent(value?: Partial<SharedChromeContent>): SharedChromeContent {
@@ -93,6 +99,9 @@ function normalizeSharedContent(value?: Partial<SharedChromeContent>): SharedChr
     footerImages: Array.from({ length: 4 }, (_, index) => sourceImages[index % sourceImages.length]),
     instagramHandle: value?.instagramHandle || sharedFallback.instagramHandle,
     copyright: value?.copyright || sharedFallback.copyright,
+    facebookUrl: value?.facebookUrl || sharedFallback.facebookUrl,
+    instagramUrl: value?.instagramUrl || sharedFallback.instagramUrl,
+    whatsappUrl: value?.whatsappUrl || sharedFallback.whatsappUrl,
   };
 }
 
@@ -134,11 +143,11 @@ export function SiteFooter({ content: provided }: { content?: Partial<SharedChro
       </div>
       <div className="footer-social">
         <span>FOLLOW US ON INSTAGRAM</span>
-        <a className="instagram-handle" href="https://www.instagram.com/">{content.instagramHandle}</a>
+        <a className="instagram-handle" href={content.instagramUrl} target="_blank" rel="noreferrer">{content.instagramHandle}</a>
         <div className="social-links">
-          <a className="facebook-icon" href="https://www.facebook.com/" aria-label="Facebook">f</a>
-          <a className="instagram-icon" href="https://www.instagram.com/" aria-label="Instagram"><span /></a>
-          <a className="whatsapp-icon" href="https://wa.me/84555583655" aria-label="WhatsApp" target="_blank" rel="noreferrer"><img src="/whatsapp-icon.png" alt="" /></a>
+          <a className="facebook-icon" href={content.facebookUrl} aria-label="Facebook" target="_blank" rel="noreferrer">f</a>
+          <a className="instagram-icon" href={content.instagramUrl} aria-label="Instagram" target="_blank" rel="noreferrer"><span /></a>
+          <a className="whatsapp-icon" href={content.whatsappUrl} aria-label="WhatsApp" target="_blank" rel="noreferrer"><img src="/whatsapp-icon.png" alt="" /></a>
         </div>
       </div>
       <div className="footer-bottom"><p>{content.copyright}</p><a href="#top" aria-label="Back to top">↑</a></div>

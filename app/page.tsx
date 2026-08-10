@@ -46,6 +46,7 @@ const homeFallback = {
   works: [{title:"Portraits",image:"/portrait-4.jpg",href:"/gallery-2"},{title:"Love Stories",image:"/horizontal-1.jpg",href:"/gallery-1"},{title:"Weddings",image:"/vertical-2.jpg",href:"/gallery-3"}],
   contactTitle: "Get in touch", contactText: "Send us a message, and we'll set up a free discovery call to start planning your dream elopement.", contactEmail: "hello@ourjune.photo", contactImage: "/hero-alt.jpg",
   footerImages: ["/portrait-1.jpg","/portrait-4.jpg","/horizontal-3.jpg","/hero.jpg"], instagramHandle: "@OURJUNE", copyright: "© 2026 OUR JUNE",
+  facebookUrl: "https://www.facebook.com/", instagramUrl: "https://www.instagram.com/", whatsappUrl: "https://wa.me/84555583655",
 };
 
 export default function Home() {

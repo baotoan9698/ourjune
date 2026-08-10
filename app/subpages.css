@@ -27,7 +27,7 @@
 .alex-emma-image { display:block; width:100%; height:100%; object-fit:cover; object-position:center center; }
 .about-page .page-intro .page-label,.about-page .client-say>.page-label,.about-page .about-services .page-label { font-size:14px; line-height:25px; letter-spacing:7px; }
 .about-page .page-title { font-size:clamp(48px,5.1vw,76px); }
-.client-say { box-sizing:border-box; width:100%; height:480px; min-height:480px; max-height:480px; padding:70px 3.2%; display:flex; flex-direction:column; overflow:hidden; }
+.about-page .client-say { box-sizing:border-box; width:100%; height:480px; min-height:480px; max-height:480px; padding:70px 3.2%; display:flex; flex-direction:column; overflow:hidden; background:#111111; }
 .client-say blockquote { width:100%; max-width:920px; margin:0 auto; align-self:center; font:500 clamp(26px,3vw,42px)/1.15 "Archivo",sans-serif; }
 .client-say cite { display:block; text-align:right; font:300 14px/25px "Roboto Mono",monospace; letter-spacing:1px; }
 .client-say-slide { min-height:0; height:100%; flex:1; display:grid; grid-template-rows:minmax(0,1fr) auto; overflow:hidden; animation:clientSayIn .45s ease both; }

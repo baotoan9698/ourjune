@@ -15,13 +15,21 @@ function isImageField(name: string) {
 const fieldLabels: Record<string, string> = {
   menuTitle: "Tên hiển thị trên menu Portfolio",
   slug: "Slug đường dẫn (ví dụ: wedding-stories)",
+  facebookUrl: "Link Facebook",
+  instagramUrl: "Link Instagram",
+  whatsappUrl: "Link WhatsApp",
 };
 
 function prepareContentValue(key: string, value: JsonValue): JsonValue {
   const copy = structuredClone(value);
   if (!copy || Array.isArray(copy) || typeof copy !== "object") return copy;
   const prepared = copy as Record<string, JsonValue>;
-  if (key === "home" && typeof prepared.contactImage !== "string") prepared.contactImage = "/hero-alt.jpg";
+  if (key === "home") {
+    if (typeof prepared.contactImage !== "string") prepared.contactImage = "/hero-alt.jpg";
+    if (typeof prepared.facebookUrl !== "string") prepared.facebookUrl = "https://www.facebook.com/";
+    if (typeof prepared.instagramUrl !== "string") prepared.instagramUrl = "https://www.instagram.com/";
+    if (typeof prepared.whatsappUrl !== "string") prepared.whatsappUrl = "https://wa.me/84555583655";
+  }
   if (key === "service") {
     const currentTitle = typeof prepared.heroTitle === "string" ? prepared.heroTitle : "";
     if (/^https?:\/\//i.test(currentTitle)) {
