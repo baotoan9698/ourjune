@@ -8,7 +8,6 @@ const nav = [
   ["Home", "/"],
   ["About", "/about"],
   ["Service", "/service"],
-  ["Testimonials", "/testimonials"],
   ["Portfolio", "/Portfolio"],
   ["Contact", "/contact"],
 ];
@@ -142,7 +141,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="testimonial" id="testimonials">
+      {false && <section className="testimonial" id="testimonials">
         <div className="testimonial-card" key={`copy-${testimonialIndex}`}>
           <span className="eyebrow">KIND WORDS</span>
           <blockquote>{testimonial.quote}</blockquote>
@@ -167,7 +166,7 @@ export default function Home() {
         <div className="testimonial-visual">
           <img key={`image-${testimonialIndex}`} src={testimonial.image} alt={`${testimonial.names} love story`} />
         </div>
-      </section>
+      </section>}
 
       <section className="quote">
         <p>{content.quote}</p>

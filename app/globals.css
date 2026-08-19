@@ -71,6 +71,7 @@ h2 { font-weight:400; letter-spacing:-4px; }
 .about-copy p { max-width:470px; font-size:14px; line-height:25px; margin:0 0 24px; }
 .text-link { display:inline-flex; gap:50px; align-items:center; margin-top:28px; padding-bottom:8px; border-bottom:1px solid #fff; text-transform:uppercase; font:600 11px/1 "Roboto Mono", monospace; letter-spacing:2px; }
 .testimonial { height:min(760px,76vw); min-height:600px; position:relative; display:grid; grid-template-columns:35% 65%; background:#111; overflow:hidden; }
+.home-content > .testimonial { display:none; }
 .testimonial-card { background:#111; padding:55px 13% 58px; display:flex; flex-direction:column; }
 .testimonial-card .eyebrow { color:#d7d5d5; letter-spacing:6px; }
 .testimonial-card blockquote { max-width:390px; margin:auto 0 58px; color:#d7d5d5; font:300 14px/25px "Roboto Mono", monospace; letter-spacing:0; animation:testimonial-in .45s ease both; }

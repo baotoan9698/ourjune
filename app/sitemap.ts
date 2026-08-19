@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const routes = ["", "/about", "/service", "/testimonials", "/Portfolio", "/gallery-1", "/gallery-2", "/gallery-3", "/gallery-4", "/contact"];
+const routes = ["", "/about", "/service", "/Portfolio", "/gallery-1", "/gallery-2", "/gallery-3", "/gallery-4", "/contact"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
