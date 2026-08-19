@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./subpages.css";
+import { ScrollReveal } from "./components/ScrollReveal";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>{children}<ScrollReveal /></body>
     </html>
   );
 }
