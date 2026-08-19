@@ -113,18 +113,18 @@
 .portfolio-hero-copy { width:100%; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:8%; filter:none; }
 .portfolio-hero h1 { margin:0; font:500 clamp(58px,6vw,92px)/1 "Archivo",sans-serif; letter-spacing:-4px; }
 .portfolio-hero p { max-width:480px; margin:0; font:300 14px/25px "Roboto Mono",monospace; }
-.portfolio-collections { min-height:1420px; max-width:1440px; margin:0 auto; padding:110px 6% 140px; display:grid; grid-template-columns:1fr 1fr; gap:90px 12%; align-items:start; }
+.portfolio-collections { min-height:1540px; max-width:1680px; margin:0 auto; padding:110px 4% 140px; display:grid; grid-template-columns:1fr 1fr; gap:90px 7%; align-items:start; }
 .portfolio-project { display:block; }
-.portfolio-project.project-1 { width:72%; margin:55px 0 0 4%; }
-.portfolio-project.project-2 { width:90%; justify-self:end; }
-.portfolio-project.project-3 { width:92%; margin-top:10px; }
-.portfolio-project.project-4 { width:72%; margin-top:95px; justify-self:end; }
+.portfolio-project.project-1 { width:88%; margin:55px 0 0; }
+.portfolio-project.project-2 { width:100%; justify-self:end; }
+.portfolio-project.project-3 { width:100%; margin-top:10px; }
+.portfolio-project.project-4 { width:88%; margin-top:95px; justify-self:end; }
 .portfolio-project span { display:block; margin-bottom:12px; color:#888; font:300 14px/25px "Roboto Mono",monospace; }
 .portfolio-project img { width:100%; object-fit:cover; transition:transform .5s; }
-.portfolio-project.project-1 img { height:390px; }
-.portfolio-project.project-2 img { height:510px; }
-.portfolio-project.project-3 img { height:520px; }
-.portfolio-project.project-4 img { height:380px; }
+.portfolio-project.project-1 img { height:500px; }
+.portfolio-project.project-2 img { height:620px; }
+.portfolio-project.project-3 img { height:630px; }
+.portfolio-project.project-4 img { height:490px; }
 .portfolio-project:hover img { transform:scale(1.015); }
 .portfolio-project h2 { margin:14px 0 0; text-align:right; font:500 24px/1 "Archivo",sans-serif; letter-spacing:-.6px; }
 .inner-contact.image-contact { min-height:520px; background-image:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.58)),url('/hero-alt.jpg'); background-size:cover; background-position:center; }
@@ -133,8 +133,8 @@
   .subpage-main{padding-top:86px}.page-intro,.about-hero-grid,.about-story,.contact-page-head,.contact-layout,.gallery-hero-copy,.service-hero-copy,.approach,.portfolio-hero-copy{grid-template-columns:1fr}.page-intro{min-height:270px;gap:55px}.page-title{justify-self:start;text-align:left}.about-hero-grid{gap:50px}.about-hero-grid img{width:80%}.about-story>img{height:500px}.about-columns{grid-template-columns:1fr}.about-services{grid-template-columns:1fr}.about-services img{height:430px}.contact-page-head{gap:60px}.contact-details{justify-self:start}.contact-layout{padding:0 24px 100px;gap:70px}.gallery-hero,.service-hero,.portfolio-hero{min-height:620px}.gallery-hero-copy,.service-hero-copy,.portfolio-hero-copy{gap:45px}.masonry{columns:1;padding:55px 24px}.packages,.testimonials-grid{grid-template-columns:1fr;padding:70px 24px;gap:70px}.testimonial-item:nth-child(3n+2){margin-top:0}.faq{padding:70px 24px}.faq-row{grid-template-columns:1fr;gap:18px}.inner-contact{grid-template-columns:1fr;gap:35px}.about-story-copy{min-height:620px}.inner-footer{min-height:650px}.portfolio-collections{min-height:0;padding:70px 24px;grid-template-columns:1fr;gap:70px}.portfolio-project,.portfolio-project:nth-child(even){width:82%;justify-self:start;margin-top:0}.portfolio-project:nth-child(even){justify-self:end}.portfolio-project img{height:360px}}
 
 @media(max-width:800px){
-  .portfolio-project.project-1,.portfolio-project.project-2,.portfolio-project.project-3,.portfolio-project.project-4{width:92%;margin-top:0;margin-left:0;}
-  .portfolio-project.project-1 img,.portfolio-project.project-2 img,.portfolio-project.project-3 img,.portfolio-project.project-4 img{height:400px;}
+  .portfolio-project.project-1,.portfolio-project.project-2,.portfolio-project.project-3,.portfolio-project.project-4{width:100%;margin-top:0;margin-left:0;}
+  .portfolio-project.project-1 img,.portfolio-project.project-2 img,.portfolio-project.project-3 img,.portfolio-project.project-4 img{height:460px;}
   .alex-emma-section{height:auto;padding:60px 24px;grid-template-columns:1fr;gap:45px;}
   .alex-emma-content{display:contents;}
   .alex-emma-content h2{order:1;}
