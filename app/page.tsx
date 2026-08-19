@@ -61,7 +61,8 @@ export default function Home() {
     const loadHomeContent = () => {
       getBrowserSupabase()?.from("site_content").select("value").eq("key", "home").maybeSingle().then(({ data }) => {
         if (data?.value) {
-          const nextContent = data.value as typeof homeFallback;
+          const savedContent = data.value as typeof homeFallback;
+          const nextContent = { ...savedContent, works: savedContent.works.length >= 4 ? savedContent.works : [...savedContent.works, { title: "New Story", image: "/horizontal-1.jpg", href: "/gallery-4" }] };
           const heroImage = new Image();
           const showContent = () => setContent(nextContent);
           heroImage.addEventListener("load", showContent, { once: true });
@@ -182,7 +183,7 @@ export default function Home() {
           <p>{content.worksDescription}</p>
         </div>
         <div className="gallery">
-          {content.works.map((work,index)=><a className={`work-card ${["card-portrait","card-love","card-wedding"][index] ?? ""}`} href={work.href} key={work.title}><img src={work.image} alt={work.title}/><span><b>{String(index+1).padStart(2,"0")}</b> {work.title} <i>↗</i></span></a>)}
+          {content.works.map((work,index)=><a className={`work-card ${["card-portrait","card-love","card-wedding","card-fourth"][index] ?? ""}`} href={work.href} key={`${work.title}-${index}`}><img src={work.image} alt={work.title}/><span><b>{String(index+1).padStart(2,"0")}</b> {work.title} <i>↗</i></span></a>)}
         </div>
         <a className="outline-button" href="/Portfolio">See Portfolio <span>↗</span></a>
       </section>

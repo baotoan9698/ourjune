@@ -99,6 +99,15 @@ set value = value || jsonb_build_object(
 where key = 'home';
 
 update public.site_content
+set value = jsonb_set(
+  value,
+  '{works}',
+  (value->'works') || '{"title":"New Story","image":"/horizontal-1.jpg","href":"/gallery-4"}'::jsonb,
+  true
+)
+where key = 'home' and jsonb_array_length(value->'works') < 4;
+
+update public.site_content
 set value = jsonb_set(value, '{heroImage}', '"/horizontal-1.jpg"'::jsonb, true)
 where key = 'service' and not (value ? 'heroImage');
 

@@ -103,6 +103,8 @@ h2 { font-weight:400; letter-spacing:-4px; }
 .card-love img { height:430px; }
 .card-wedding { grid-column:9/13; margin-top:150px; }
 .card-wedding img { height:650px; }
+.card-fourth { width:100%; grid-column:5/9; margin-top:-350px; }
+.card-fourth img { height:520px; }
 .outline-button,.light-button { display:flex; justify-content:space-between; align-items:center; width:220px; padding:19px 22px; border:1px solid #777; margin:80px auto 0; text-transform:uppercase; font:500 10px/1 "Roboto Mono", monospace; letter-spacing:2px; transition:.25s; }
 .outline-button:hover { background:white; color:black; }
 .services { display:grid; grid-template-columns:1fr 1fr; min-height:850px; }
@@ -180,7 +182,7 @@ h2 { font-weight:400; letter-spacing:-4px; }
   .works-head p { width:auto; margin-top:40px; }
   .gallery { display:block; }
   .work-card { margin:0 0 60px; }
-  .card-portrait img,.card-love img,.card-wedding img { height:520px; }
+  .card-portrait img,.card-love img,.card-wedding img,.card-fourth img { height:520px; }
   .services { grid-template-columns:1fr; }
   .services-image { min-height:620px; }
   .services-copy { padding:90px 25px; }

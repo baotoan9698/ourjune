@@ -29,6 +29,8 @@ function prepareContentValue(key: string, value: JsonValue): JsonValue {
     if (typeof prepared.facebookUrl !== "string") prepared.facebookUrl = "https://www.facebook.com/";
     if (typeof prepared.instagramUrl !== "string") prepared.instagramUrl = "https://www.instagram.com/";
     if (typeof prepared.whatsappUrl !== "string") prepared.whatsappUrl = "https://wa.me/84555583655";
+    const works = Array.isArray(prepared.works) ? prepared.works : [];
+    if (works.length < 4) prepared.works = [...works, { title: "New Story", image: "/horizontal-1.jpg", href: "/gallery-4" }];
   }
   if (key === "service") {
     const currentTitle = typeof prepared.heroTitle === "string" ? prepared.heroTitle : "";
