@@ -108,6 +108,19 @@ set value = jsonb_set(
 where key = 'home' and jsonb_array_length(value->'works') < 4;
 
 update public.site_content
+set value = jsonb_set(
+  value,
+  '{packages}',
+  (value->'packages') || '{"title":"New Service Package","text":"Up to 4 Hours\nEdited Photos\nOnline Gallery\n**$ 1,500**","image":"/horizontal-3.jpg"}'::jsonb,
+  true
+)
+where key = 'service' and jsonb_array_length(value->'packages') < 4;
+
+update public.site_content
+set value = jsonb_set(value, '{heroImage}', '"/hero.jpg"'::jsonb, true)
+where key = 'portfolio' and not (value ? 'heroImage');
+
+update public.site_content
 set value = jsonb_set(value, '{heroImage}', '"/horizontal-1.jpg"'::jsonb, true)
 where key = 'service' and not (value ? 'heroImage');
 

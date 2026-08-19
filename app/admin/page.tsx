@@ -39,7 +39,10 @@ function prepareContentValue(key: string, value: JsonValue): JsonValue {
       prepared.heroTitle = "More details about our services";
     }
     if (typeof prepared.heroImage !== "string") prepared.heroImage = "/horizontal-1.jpg";
+    const packages = Array.isArray(prepared.packages) ? prepared.packages : [];
+    if (packages.length < 4) prepared.packages = [...packages, { title: "New Service Package", text: "Up to 4 Hours\nEdited Photos\nOnline Gallery\n**$ 1,500**", image: "/horizontal-3.jpg" }];
   }
+  if (key === "portfolio" && typeof prepared.heroImage !== "string") prepared.heroImage = "/hero.jpg";
   if (key.startsWith("gallery-")) {
     if (typeof prepared.menuTitle !== "string") prepared.menuTitle = typeof prepared.title === "string" ? prepared.title : key;
     if (typeof prepared.slug !== "string") prepared.slug = key;
