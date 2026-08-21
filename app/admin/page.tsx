@@ -10,7 +10,7 @@ type ContentRow = { key: string; page: string; label: string; value: JsonValue; 
 type GalleryLinkOption = { label: string; value: string; legacy: string };
 
 function isImageField(name: string) {
-  return /images?$/i.test(name) || /(^|_)(photo|portrait|background)$/i.test(name) || name.toLowerCase() === "hero";
+  return /images?\d*$/i.test(name) || /(^|_)(photo|portrait|background)\d*$/i.test(name) || name.toLowerCase() === "hero";
 }
 const fieldLabels: Record<string, string> = {
   menuTitle: "Tên hiển thị trên menu Portfolio",
